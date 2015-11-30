@@ -1,5 +1,6 @@
 import { createAction } from 'redux-actions';
 
 export default {
-  open: createAction('MAPS_OPEN')
+  new: createAction('NEW_MAP'),
+  open: createAction('OPEN_MAP'),
 };

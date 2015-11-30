@@ -6,6 +6,7 @@ import { devTools } from 'redux-devtools';
 import { Provider } from 'react-redux';
 import reducer from './reducers/index';
 import App from './containers/App';
+import ipc from 'ipc-renderer';
 
 const middleware = [thunkMiddleware];
 
@@ -15,6 +16,11 @@ const appCreateStore = (isDevelopment
                         : applyMiddleware(...middleware)(createStore));
 const store = appCreateStore(reducer);
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
+
+ipc.on('save', (e, path) => {
+  console.log('SAVE!', path)
+  e.sender.send('saved');
+});
 
 ReactDOM.render(
   <div>

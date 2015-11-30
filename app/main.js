@@ -1,6 +1,23 @@
+import thunkMiddleware from 'redux-thunk';
+import { applyMiddleware, compose, createStore } from 'redux';
+import reducer from './reducers/index';
 import app from 'app';
-import BrowserWindow from 'browser-window';
 import crashReporter from 'crash-reporter';
+import menu from './menu';
+import { createWindow } from './actions/windows';
+
+const middleware = [thunkMiddleware];
+
+//const isDevelopment = process.env.NODE_ENV === 'development';
+const appCreateStore = applyMiddleware(...middleware)(createStore);
+const store = appCreateStore(reducer);
+
+function randomString() {
+  const x = 2147483648;
+  const now = +new Date();
+  return Math.floor(Math.random() * x).toString(36) +
+    Math.abs(Math.floor(Math.random() * x) ^ now).toString(36);
+}
 
 crashReporter.start();
 
@@ -14,16 +31,12 @@ app.on('window-all-closed', () => {
   }
 });
 
+function readFile(path, callback) {
+  fs.readFile(path, 'utf-8', callback);
+}
+
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({ width: 1200, height: 1000 });
+  menu.init(store.dispatch);
 
-  mainWindow.loadURL(`file://${__dirname}/client/index.html`);
-
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.openDevTools();
-  }
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+  store.dispatch(createWindow());
 });
