@@ -17,6 +17,19 @@ const appCreateStore = (isDevelopment
 const store = appCreateStore(reducer);
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
 
+function parseQueryString(qs) {
+  if (qs.length <= 1) {
+    return {};
+  }
+
+  qs = qs.substring(1);
+  return qs.split('&')
+           .map(kv => kv.split('=').map(decodeURIComponent))
+           .reduce((acc, [k, v]) => { acc[k] = v; return acc; }, {});
+}
+
+const params = parseQueryString(window.location.search);
+
 ipc.on('save', (e, path) => {
   console.log('SAVE!', path)
   e.sender.send('saved');
