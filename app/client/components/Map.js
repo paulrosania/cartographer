@@ -1,32 +1,34 @@
 import React, { Component, PropTypes } from 'react';
 import ReactART, { Group, Path, Shape, Surface } from 'react-art';
 
-const PADDING = 1;
+const PADDING_X = 20;
+const PADDING_Y = 50;
 
 export default class Map extends Component {
   static defaultProps = {
+    onMouseMove: function() {},
+    onClick: function() {}
   };
 
   static propTypes = {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     tileWidth: PropTypes.number.isRequired,
-    tileHeight: PropTypes.number.isRequired
+    tileHeight: PropTypes.number.isRequired,
+    onMouseMove: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
+    selectedTile: PropTypes.object,
+    highlightedTile: PropTypes.object
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
 
   pixelWidth() {
     const { width, height, tileWidth } = this.props;
-    return 2 * PADDING + tileWidth * (width + height) / 2;
+    return 2 * PADDING_X + tileWidth * (width + height) / 2;
   }
 
   pixelHeight() {
     const { width, height, tileHeight } = this.props;
-    return 2 * PADDING + tileHeight * (width + height) / 2;
+    return 2 * PADDING_Y + tileHeight * (width + height) / 2;
   }
 
   render() {
@@ -44,30 +46,35 @@ export default class Map extends Component {
   }
 
   handleMouseMove(e) {
-    const { width, height } = this.props;
+    const { width, height, onMouseMove } = this.props;
     const x = e.pageX - e.target.offsetLeft;
     const y = e.pageY - e.target.offsetTop;
     const pt = this.screen2map(x, y);
     if (pt.x >= 0 && pt.y >= 0 && pt.x < width && pt.y < height) {
-      this.setState(Object.assign({}, this.state, {
-        hoverTile: pt
-      }));
+      e.tile = pt;
     } else {
-      this.setState(Object.assign({}, this.state, {
-        hoverTile: null
-      }));
+      e.tile = null;
     }
+    onMouseMove(e);
   }
 
   handleClick(e) {
+    const { width, height, onClick } = this.props;
     const x = e.pageX - e.target.offsetLeft;
     const y = e.pageY - e.target.offsetTop;
+    const pt = this.screen2map(x, y);
+    if (pt.x >= 0 && pt.y >= 0 && pt.x < width && pt.y < height) {
+      e.tile = pt;
+    } else {
+      e.tile = null;
+    }
+    onClick(e);
   }
 
   screen2map(x, y) {
     const { width, height, tileWidth, tileHeight } = this.props;
-    const x0 = PADDING + this.pixelWidth() * (height / (width + height));
-    const y0 = PADDING;
+    const x0 = PADDING_X + this.pixelWidth() * (height / (width + height));
+    const y0 = PADDING_Y;
     const ix = (x - x0) * 2 / tileWidth;
     const iy = (y - y0) * 2 / tileHeight;
 
@@ -79,8 +86,8 @@ export default class Map extends Component {
 
   map2screen(x, y) {
     const { width, height, tileWidth, tileHeight } = this.props;
-    const x0 = PADDING + this.pixelWidth() * (height / (width + height));
-    const y0 = PADDING;
+    const x0 = PADDING_X + this.pixelWidth() * (height / (width + height));
+    const y0 = PADDING_Y;
     return {
       x: x0 + (x - y) * tileWidth / 2,
       y: y0 + (x + y) * tileHeight / 2
@@ -115,12 +122,15 @@ export default class Map extends Component {
       }
     }
 
-    const { hoverTile } = this.state;
+    const { selectedTile, highlightedTile } = this.props;
 
-    if (hoverTile) {
-      tiles.push(this.renderTile(hoverTile.x, hoverTile.y, "#ffff00"));
+    if (highlightedTile) {
+      tiles.push(this.renderTile(highlightedTile.x, highlightedTile.y, "#ffff00"));
     }
 
+    if (selectedTile) {
+      tiles.push(this.renderTile(selectedTile.x, selectedTile.y, "#ffffff"));
+    }
 
     return (
       <Group>

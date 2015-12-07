@@ -1,6 +1,7 @@
 import layers from './layers';
 import { ADD_LAYER, REMOVE_LAYER } from '../actions/layers';
-import { NEW_MAP, OPEN_MAP, RESIZE_MAP } from '../actions/map';
+import { NEW_MAP, OPEN_MAP, RESIZE_MAP,
+         HIGHLIGHT_TILE, SELECT_TILE } from '../actions/map';
 
 const initialState = {
   orientation: 'staggered',
@@ -11,6 +12,8 @@ const initialState = {
   tileHeight: 100,
   staggerAxis: 'x',    // [x|y]
   staggerIndex: 'odd', // [odd|even]
+  selectedTile: null,
+  highlightedTile: null,
   tileset: null,
   layers: [],
   properties: {}
@@ -33,6 +36,14 @@ export default function map(state = initialState, action) {
     case REMOVE_LAYER:
       return Object.assign({}, state, {
         layers: layers(state.layers, action)
+      });
+    case HIGHLIGHT_TILE:
+      return Object.assign({}, state, {
+        highlightedTile: action.tile
+      });
+    case SELECT_TILE:
+      return Object.assign({}, state, {
+        selectedTile: action.tile
       });
     default:
       return state;
