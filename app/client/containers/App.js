@@ -21,7 +21,7 @@ export default class App extends Component {
     const { selectedTile, highlightedTile } = map;
 
     return (
-      <div style={{backgroundColor: "#000000"}}>
+      <div style={{backgroundColor: "#222222"}}>
         <Map
           width={8}
           height={8}
