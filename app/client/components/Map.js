@@ -42,15 +42,16 @@ export default class Map extends Component {
     }
 
     return (
-      <div
-        style={{width:"100%", height:"100%", overflow: "hidden"}}
-        onMouseMove={this.handleMouseMove.bind(this)}
-        onClick={this.handleClick.bind(this)}>
-        <Surface
-          width={this.pixelWidth()}
-          height={this.pixelHeight()}>
-          {this.renderFrame()}
-        </Surface>
+      <div style={{width:"100%", height:"100%", overflow: "hidden"}}>
+        <div
+          onMouseMove={this.handleMouseMove.bind(this)}
+          onClick={this.handleClick.bind(this)}>
+          <Surface
+            width={this.pixelWidth()}
+            height={this.pixelHeight()}>
+            {this.renderFrame()}
+          </Surface>
+        </div>
         <TileInspector
           x={inspectorX}
           y={inspectorY}
