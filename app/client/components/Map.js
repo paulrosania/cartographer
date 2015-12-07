@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ReactART, { Group, Path, Shape, Surface } from 'react-art';
+import TileInspector from './TileInspector';
 
 const PADDING_X = 10;
 const PADDING_Y = 40;
@@ -32,6 +33,13 @@ export default class Map extends Component {
   }
 
   render() {
+    const { selectedTile, tileWidth, tileHeight } = this.props;
+    if (selectedTile) {
+      const selectedTilePx = this.map2screen(selectedTile.x, selectedTile.y);
+      var inspectorX = selectedTilePx.x + tileWidth / 2 + 8;
+      var inspectorY = selectedTilePx.y + tileHeight / 2 - 8;
+    }
+
     return (
       <div
         style={{width:"100%", height:"100%", overflow: "hidden"}}
@@ -42,6 +50,10 @@ export default class Map extends Component {
           height={this.pixelHeight()}>
           {this.renderFrame()}
         </Surface>
+        <TileInspector
+          x={inspectorX}
+          y={inspectorY}
+          visible={!!this.props.selectedTile} />
       </div>
     );
   }
