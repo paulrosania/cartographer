@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactART, { Group, Path, Shape, Surface } from 'react-art';
 
-const PADDING_X = 20;
-const PADDING_Y = 50;
+const PADDING_X = 10;
+const PADDING_Y = 40;
 
 export default class Map extends Component {
   static defaultProps = {
