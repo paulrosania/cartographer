@@ -9,7 +9,7 @@ const initialState = {
   width: 10,
   height: 10,
   tileWidth: 100,
-  tileHeight: 100,
+  tileHeight: 50,
   staggerAxis: 'x',    // [x|y]
   staggerIndex: 'odd', // [odd|even]
   selectedTile: null,

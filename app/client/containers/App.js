@@ -18,15 +18,16 @@ export default class App extends Component {
 
   render() {
     const { map } = this.props;
-    const { selectedTile, highlightedTile } = map;
+    const { width, height, tileWidth, tileHeight,
+            selectedTile, highlightedTile } = map;
 
     return (
       <div style={{backgroundColor: "#222222"}}>
         <Map
-          width={8}
-          height={8}
-          tileWidth={100}
-          tileHeight={50}
+          width={width}
+          height={height}
+          tileWidth={tileWidth}
+          tileHeight={tileHeight}
           selectedTile={selectedTile}
           highlightedTile={highlightedTile}
           onMouseMove={this.handleMapMove.bind(this)}
