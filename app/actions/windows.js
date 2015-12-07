@@ -7,9 +7,9 @@ export function createWindow(path) {
     const baseUrl = `file://${__dirname}/../client/index.html`;
     let url = baseUrl;
     if (path !== undefined) {
+      const encodedPath = encodeURIComponent(path);
       url = `${baseUrl}?path=${encodedPath}`;
     }
-    const encodedPath = encodeURIComponent(path);
 
     let win = new BrowserWindow({ width: 1200, height: 1000 });
 

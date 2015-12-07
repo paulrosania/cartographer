@@ -7,15 +7,7 @@ import { Provider } from 'react-redux';
 import reducer from './reducers/index';
 import App from './containers/App';
 import ipc from 'ipc-renderer';
-
-const middleware = [thunkMiddleware];
-
-const isDevelopment = process.env.NODE_ENV === 'development';
-const appCreateStore = (isDevelopment
-                        ? compose(applyMiddleware(...middleware), devTools())(createStore)
-                        : applyMiddleware(...middleware)(createStore));
-const store = appCreateStore(reducer);
-const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
+import fs from 'fs';
 
 function parseQueryString(qs) {
   if (qs.length <= 1) {
@@ -30,13 +22,36 @@ function parseQueryString(qs) {
 
 const params = parseQueryString(window.location.search);
 if (params.path !== undefined) {
-  // LOAD
+  let json = fs.readFileSync(params.path, {
+    encoding: 'utf-8',
+    flag: 'r'
+  });
+  initialState = JSON.parse(json);
+} else {
+  initialState = undefined;
 }
 
 ipc.on('save', (e, path) => {
-  console.log('SAVE!', path)
-  e.sender.send('saved');
+  console.log('SAVE!', path);
+  const data = JSON.stringify(store.getState());
+  fs.writeFile(path, data, {
+    encoding: 'utf-8',
+    flag: 'w',
+    mode: 0o664,
+  }, (err) => {
+    if (err) throw err;
+    e.sender.send('saved');
+  });
 });
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+const middleware = [thunkMiddleware];
+const appCreateStore = (isDevelopment
+                        ? compose(applyMiddleware(...middleware), devTools())(createStore)
+                        : applyMiddleware(...middleware)(createStore));
+const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
+
+const store = appCreateStore(reducer, initialState);
 
 ReactDOM.render(
   <div>

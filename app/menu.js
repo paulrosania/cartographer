@@ -26,7 +26,7 @@ function makeTemplate(dispatch) {
                 return;
               }
 
-              filenames.forEach(createWindow);
+              filenames.forEach(path => dispatch(createWindow(path)));
             });
           }
         },
