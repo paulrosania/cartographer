@@ -29,6 +29,9 @@ function parseQueryString(qs) {
 }
 
 const params = parseQueryString(window.location.search);
+if (params.path !== undefined) {
+  // LOAD
+}
 
 ipc.on('save', (e, path) => {
   console.log('SAVE!', path)
