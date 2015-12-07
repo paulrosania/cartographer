@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { selectTile, highlightTile } from '../actions/map';
+import Sidebar from '../components/Sidebar';
 import Map from '../components/Map';
 
 @connect((state) => state)
@@ -34,9 +35,7 @@ export default class App extends Component {
             onMouseMove={this.handleMapMove.bind(this)}
             onClick={this.handleMapClick.bind(this)} />
         </div>
-        <div className="pane-sm sidebar">
-          hi
-        </div>
+        <Sidebar />
       </div>
     );
   }
