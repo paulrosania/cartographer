@@ -22,16 +22,21 @@ export default class App extends Component {
             selectedTile, highlightedTile } = map;
 
     return (
-      <div style={{backgroundColor: "#222222"}}>
-        <Map
-          width={width}
-          height={height}
-          tileWidth={tileWidth}
-          tileHeight={tileHeight}
-          selectedTile={selectedTile}
-          highlightedTile={highlightedTile}
-          onMouseMove={this.handleMapMove.bind(this)}
-          onClick={this.handleMapClick.bind(this)} />
+      <div className="pane-group" style={{backgroundColor: "#222222"}}>
+        <div className="pane">
+          <Map
+            width={width}
+            height={height}
+            tileWidth={tileWidth}
+            tileHeight={tileHeight}
+            selectedTile={selectedTile}
+            highlightedTile={highlightedTile}
+            onMouseMove={this.handleMapMove.bind(this)}
+            onClick={this.handleMapClick.bind(this)} />
+        </div>
+        <div className="pane-sm sidebar">
+          hi
+        </div>
       </div>
     );
   }
