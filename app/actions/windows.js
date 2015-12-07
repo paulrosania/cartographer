@@ -4,8 +4,12 @@ import pathutils from 'path';
 
 export function createWindow(path) {
   return dispatch => {
+    const baseUrl = `file://${__dirname}/../client/index.html`;
+    let url = baseUrl;
+    if (path !== undefined) {
+      url = `${baseUrl}?path=${encodedPath}`;
+    }
     const encodedPath = encodeURIComponent(path);
-    const url = `file://${__dirname}/../client/index.html?path=${encodedPath}`;
 
     let win = new BrowserWindow({ width: 1200, height: 1000 });
 
