@@ -34,10 +34,11 @@ export default class Map extends Component {
 
   render() {
     const { selectedTile, tileWidth, tileHeight } = this.props;
+    var inspectorX = 0, inspectorY = 0;
     if (selectedTile) {
       const selectedTilePx = this.map2screen(selectedTile.x, selectedTile.y);
-      var inspectorX = selectedTilePx.x + tileWidth / 2 + 8;
-      var inspectorY = selectedTilePx.y + tileHeight / 2 - 8;
+      inspectorX = selectedTilePx.x + tileWidth / 2 + 8;
+      inspectorY = selectedTilePx.y + tileHeight / 2 - 8;
     }
 
     return (
