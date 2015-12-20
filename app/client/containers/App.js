@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { selectTile, highlightTile } from '../actions/map';
+import { layerAdd, layerRemove, layerClick } from '../actions/layers';
 import LayerPane from '../components/LayerPane';
 import Inspector from '../components/Inspector';
 import Map from '../components/Map';
@@ -18,6 +19,21 @@ export default class App extends Component {
     dispatch(selectTile(e.tile));
   }
 
+  handleLayerAdd() {
+    const { dispatch } = this.props;
+    dispatch(layerAdd());
+  }
+
+  handleLayerRemove() {
+    const { dispatch } = this.props;
+    dispatch(layerRemove());
+  }
+
+  handleLayerClick(l, i) {
+    const { dispatch } = this.props;
+    dispatch(layerClick(l, i));
+  }
+
   render() {
     const { map } = this.props;
     const { width, height, tileWidth, tileHeight,
@@ -26,7 +42,11 @@ export default class App extends Component {
 
     return (
       <div className="pane-group" style={{backgroundColor: "#222222"}}>
-        <LayerPane layers={layers} selectedLayer={0} />
+        <LayerPane layers={layers} selectedLayer={0}
+          onLayerAdd={this.handleLayerAdd.bind(this)}
+          onLayerRemove={this.handleLayerRemove.bind(this)}
+          onLayerClick={this.handleLayerClick.bind(this)}
+          />
         <div className="pane">
           <Map
             width={width}

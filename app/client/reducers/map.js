@@ -1,5 +1,5 @@
 import layers from './layers';
-import { ADD_LAYER, REMOVE_LAYER } from '../actions/layers';
+import { LAYER_ADD, LAYER_REMOVE, LAYER_CLICK } from '../actions/layers';
 import { NEW_MAP, OPEN_MAP, RESIZE_MAP,
          HIGHLIGHT_TILE, SELECT_TILE } from '../actions/map';
 
@@ -32,8 +32,8 @@ export default function map(state = initialState, action) {
         width: action.width,
         height: action.height
       });
-    case ADD_LAYER:
-    case REMOVE_LAYER:
+    case LAYER_ADD:
+    case LAYER_REMOVE:
       return Object.assign({}, state, {
         layers: layers(state.layers, action)
       });

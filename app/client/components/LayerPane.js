@@ -5,7 +5,17 @@ export default class LayerPane extends Component {
   static propTypes = {
     layers: PropTypes.array.isRequired,
     selectedLayer: PropTypes.number,
+    onLayerClick: PropTypes.func,
+    onLayerAdd: PropTypes.func,
+    onLayerRemove: PropTypes.func
   };
+
+  genLayerClickHandler(idx) {
+    return e => {
+      const layer = this.props.layers[idx];
+      this.props.onLayerClick(layer, idx);
+    }
+  }
 
   render() {
     const { layers, selectedLayer } = this.props;
@@ -31,7 +41,7 @@ export default class LayerPane extends Component {
       });
 
       return (
-        <a className={cns}>
+        <a className={cns} onClick={this.genLayerClickHandler(i)}>
           <span className="icon icon-folder"></span>
           {l.name}
         </a>
@@ -45,10 +55,10 @@ export default class LayerPane extends Component {
           {layerElements}
         </nav>
         <div className="btn-group" style={bottomBarStyle}>
-          <button className="btn btn-default">
+          <button className="btn btn-default" onClick={this.props.onLayerAdd}>
             <span className="icon icon-plus"></span>
           </button>
-          <button className="btn btn-default" disabled={true}>
+          <button className="btn btn-default" disabled={layers.length === 0} onClick={this.props.onLayerRemove}>
             <span className="icon icon-minus"></span>
           </button>
         </div>
