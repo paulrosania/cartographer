@@ -38,11 +38,11 @@ export default class App extends Component {
     const { map } = this.props;
     const { width, height, tileWidth, tileHeight,
             selectedTile, highlightedTile,
-            layers, tileset } = map;
+            layers, selectedLayer, tileset } = map;
 
     return (
       <div className="pane-group" style={{backgroundColor: "#222222"}}>
-        <LayerPane layers={layers} selectedLayer={0}
+        <LayerPane layers={layers} selectedLayer={selectedLayer}
           onLayerAdd={this.handleLayerAdd.bind(this)}
           onLayerRemove={this.handleLayerRemove.bind(this)}
           onLayerClick={this.handleLayerClick.bind(this)}

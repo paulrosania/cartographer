@@ -16,6 +16,7 @@ const initialState = {
   highlightedTile: null,
   tileset: null,
   layers: [],
+  selectedLayer: 0,
   properties: {}
 };
 
