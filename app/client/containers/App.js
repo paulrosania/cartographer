@@ -25,7 +25,7 @@ export default class App extends Component {
 
     return (
       <div className="pane-group" style={{backgroundColor: "#222222"}}>
-        <LayerPane layers={layers} />
+        <LayerPane layers={layers} selectedLayer={0} />
         <div className="pane">
           <Map
             width={width}

@@ -25,9 +25,9 @@ export default class LayerPane extends Component {
       padding: '4px'
     };
 
-    const layerElements = layers.map(l => {
+    const layerElements = layers.map((l, i) => {
       const cns = classNames('nav-group-item', {
-        active: true
+        active: i === selectedLayer
       });
 
       return (
