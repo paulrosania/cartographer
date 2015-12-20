@@ -42,7 +42,7 @@ export default class App extends Component {
 
     return (
       <div className="pane-group" style={{backgroundColor: "#222222"}}>
-        <LayerPane layers={layers} selectedLayer={selectedLayer}
+        <LayerPane layers={layers.layers} selectedLayer={layers.selectedIndex}
           onLayerAdd={this.handleLayerAdd.bind(this)}
           onLayerRemove={this.handleLayerRemove.bind(this)}
           onLayerClick={this.handleLayerClick.bind(this)}

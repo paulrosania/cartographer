@@ -15,8 +15,11 @@ const initialState = {
   selectedTile: null,
   highlightedTile: null,
   tileset: null,
-  layers: [],
-  selectedLayer: 0,
+  layers: {
+    layers: [],
+    selectedIndex: -1,
+    nextId: 0
+  },
   properties: {}
 };
 
@@ -35,6 +38,7 @@ export default function map(state = initialState, action) {
       });
     case LAYER_ADD:
     case LAYER_REMOVE:
+    case LAYER_CLICK:
       return Object.assign({}, state, {
         layers: layers(state.layers, action)
       });
