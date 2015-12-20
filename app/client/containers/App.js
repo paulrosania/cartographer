@@ -21,7 +21,8 @@ export default class App extends Component {
   render() {
     const { map } = this.props;
     const { width, height, tileWidth, tileHeight,
-            selectedTile, highlightedTile, layers } = map;
+            selectedTile, highlightedTile,
+            layers, tileset } = map;
 
     return (
       <div className="pane-group" style={{backgroundColor: "#222222"}}>
@@ -37,7 +38,7 @@ export default class App extends Component {
             onMouseMove={this.handleMapMove.bind(this)}
             onClick={this.handleMapClick.bind(this)} />
         </div>
-        <Inspector />
+        <Inspector tile={selectedTile} tileset={tileset} />
       </div>
     );
   }
