@@ -62,8 +62,9 @@ export default class Map extends Component {
 
   handleMouseMove(e) {
     const { width, height, onMouseMove } = this.props;
-    const x = e.pageX - e.target.offsetLeft;
-    const y = e.pageY - e.target.offsetTop;
+    const bounds = e.target.getBoundingClientRect();
+    const x = e.pageX - bounds.left;
+    const y = e.pageY - bounds.top;
     const pt = this.screen2map(x, y);
     if (pt.x >= 0 && pt.y >= 0 && pt.x < width && pt.y < height) {
       e.tile = pt;
@@ -75,8 +76,9 @@ export default class Map extends Component {
 
   handleClick(e) {
     const { width, height, onClick } = this.props;
-    const x = e.pageX - e.target.offsetLeft;
-    const y = e.pageY - e.target.offsetTop;
+    const bounds = e.target.getBoundingClientRect();
+    const x = e.pageX - bounds.left;
+    const y = e.pageY - bounds.top;
     const pt = this.screen2map(x, y);
     if (pt.x >= 0 && pt.y >= 0 && pt.x < width && pt.y < height) {
       e.tile = pt;
