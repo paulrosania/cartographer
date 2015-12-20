@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { selectTile, highlightTile } from '../actions/map';
-import Sidebar from '../components/Sidebar';
+import LayerPane from '../components/LayerPane';
+import Inspector from '../components/Inspector';
 import Map from '../components/Map';
 
 @connect((state) => state)
@@ -20,10 +21,11 @@ export default class App extends Component {
   render() {
     const { map } = this.props;
     const { width, height, tileWidth, tileHeight,
-            selectedTile, highlightedTile } = map;
+            selectedTile, highlightedTile, layers } = map;
 
     return (
       <div className="pane-group" style={{backgroundColor: "#222222"}}>
+        <LayerPane layers={layers} />
         <div className="pane">
           <Map
             width={width}
@@ -35,7 +37,7 @@ export default class App extends Component {
             onMouseMove={this.handleMapMove.bind(this)}
             onClick={this.handleMapClick.bind(this)} />
         </div>
-        <Sidebar />
+        <Inspector />
       </div>
     );
   }
