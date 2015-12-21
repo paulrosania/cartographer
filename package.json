@@ -26,6 +26,7 @@
     "color": "^0.10.1",
     "electron-compile": "^1.0.1",
     "fs": "0.0.2",
+    "immutable": "^3.7.6",
     "path": "^0.12.7",
     "radium": "^0.15.3",
     "react": "^0.14.3",
