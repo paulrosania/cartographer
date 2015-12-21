@@ -1,5 +1,8 @@
 import layers from './layers';
+import tileset from './tileset';
 import { LAYER_ADD, LAYER_REMOVE, LAYER_CLICK } from '../actions/layers';
+import { TILESET_LOAD, TILESET_SAVE,
+         TILESET_TILE_ADD, TILESET_TILE_REMOVE } from '../actions/tileset';
 import { NEW_MAP, OPEN_MAP, RESIZE_MAP,
          HIGHLIGHT_TILE, SELECT_TILE } from '../actions/map';
 
@@ -49,6 +52,13 @@ export default function map(state = initialState, action) {
     case SELECT_TILE:
       return Object.assign({}, state, {
         selectedTile: action.tile
+      });
+    case TILESET_LOAD:
+    case TILESET_SAVE:
+    case TILESET_TILE_ADD:
+    case TILESET_TILE_REMOVE:
+      return Object.assign({}, state, {
+        tileset: tileset(state.tileset, action)
       });
     default:
       return state;
