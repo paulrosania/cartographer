@@ -123,9 +123,6 @@ export default class Map extends Component {
     const { tileWidth, tileHeight } = this.props;
     const bottom = this.map2screen(x + 1, y + 1);
 
-    tex.height = 65;
-    tex.width = 100;
-
     const path = new Path()
       .moveTo(0, 0)
       .lineTo(tex.width, 0)

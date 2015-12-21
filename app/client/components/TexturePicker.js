@@ -17,7 +17,7 @@ export default class TexturePicker extends Component {
 
   render() {
     const { tileset } = this.props;
-    const { tiles, tileWidth, tileHeight } = tileset;
+    const { tiles } = tileset;
 
     const containerStyle = {
       padding: '2px 4px'
@@ -31,8 +31,10 @@ export default class TexturePicker extends Component {
       );
     }
 
+    const maxWidth = 60;
     const cellStyle = {
       display: 'inline-block',
+      width: maxWidth,
       margin: 2,
       padding: 2,
       ':hover': {
@@ -40,15 +42,15 @@ export default class TexturePicker extends Component {
       }
     };
 
-    const width = 60;
-    const scale = width / tileWidth;
-    const height = tileHeight * scale;
-    const imageStyle = {
-      width,
-      height
-    };
-
     const txs = tiles.map((t, i) => {
+      const width = t.width > maxWidth ? 60 : t.width;
+      const scale = width / t.width;
+      const height = t.height * scale;
+      const imageStyle = {
+        width,
+        height
+      };
+
       return (
         <div style={cellStyle} key={i} onClick={this.genTileClickHandler(i)}>
           <img src={t.path} style={imageStyle} />

@@ -19,7 +19,10 @@ const initialState = {
   staggerIndex: 'odd', // [odd|even]
   selectedTile: null,
   highlightedTile: null,
-  tileset: null,
+  tileset: {
+    selectedIndex: 0,
+    tiles: Immutable.List()
+  },
   layers: {
     layers: Immutable.List([
       {name: 'Layer 0', tiles: Immutable.List()}

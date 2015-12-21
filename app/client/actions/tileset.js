@@ -29,10 +29,14 @@ export function tilesetTileAdd() {
         return;
       }
 
-      filenames.forEach(path => dispatch({
-        type: TILESET_TILE_ADD,
-        path: path
-      }));
+      filenames.forEach(path => {
+        const img = new Image();
+        img.src = path;
+        img.addEventListener('load', e => dispatch({
+          type: TILESET_TILE_ADD,
+          image: img
+        }));
+      });
     });
   }
 }
