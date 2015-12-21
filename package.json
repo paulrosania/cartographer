@@ -23,9 +23,11 @@
   },
   "dependencies": {
     "classnames": "^2.2.1",
+    "color": "^0.10.1",
     "electron-compile": "^1.0.1",
     "fs": "0.0.2",
     "path": "^0.12.7",
+    "radium": "^0.15.3",
     "react": "^0.14.3",
     "react-art": "^0.14.0",
     "react-dom": "^0.14.3",
