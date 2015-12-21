@@ -2,10 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import thunkMiddleware from 'redux-thunk';
 import { applyMiddleware, compose, createStore } from 'redux';
-import { devTools } from 'redux-devtools';
 import { Provider } from 'react-redux';
-import reducer from './reducers/index';
-import App from './containers/App';
+import configureStore from './store/configureStore';
+import Root from './containers/Root';
 import ipc from 'ipc-renderer';
 import fs from 'fs';
 
@@ -44,26 +43,12 @@ ipc.on('save', (e, path) => {
   });
 });
 
-const isDevelopment = process.env.NODE_ENV === 'development';
-const middleware = [thunkMiddleware];
-const appCreateStore = (isDevelopment
-                        ? compose(applyMiddleware(...middleware), devTools())(createStore)
-                        : applyMiddleware(...middleware)(createStore));
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
 
-const store = appCreateStore(reducer, initialState);
+const middleware = [thunkMiddleware];
+const store = configureStore(middleware, initialState);
 
 ReactDOM.render(
-  <div>
-    <Provider store={store}>
-      <App />
-    </Provider>
-    { isDevelopment && do {
-      const { DevTools, DebugPanel, LogMonitor } = require('redux-devtools/lib/react');
-      <DebugPanel top right bottom>
-        <DevTools store={store} monitor={LogMonitor} />
-      </DebugPanel>;
-    } }
-  </div>,
+  <Root store={store} />,
   rootElement
 );
