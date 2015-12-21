@@ -100,23 +100,22 @@ export default class Map extends Component {
   }
 
   renderTileBorder(x, y, stroke) {
-    const left   = this.map2screen(x, y + 1);
-    const top    = this.map2screen(x, y);
-    const right  = this.map2screen(x + 1, y);
-    const bottom = this.map2screen(x + 1, y + 1);
+    const { tileWidth, tileHeight } = this.props;
+    const left = this.map2screen(x, y + 1);
+    const top  = this.map2screen(x, y);
 
     const path = new Path()
-      .moveTo(left.x,   left.y)
-      .lineTo(top.x,    top.y)
-      .lineTo(right.x,  right.y)
-      .lineTo(bottom.x, bottom.y)
+      .moveTo(tileWidth / 2, 0)
+      .lineTo(tileWidth, tileHeight / 2)
+      .lineTo(tileWidth / 2, tileHeight)
+      .lineTo(0, tileHeight / 2)
       .close()
-      .moveTo(left.x, left.y);
+      .moveTo(0, 0);
 
     const key = x+'-'+y+'-'+stroke;
 
     return (
-      <Shape stroke={stroke} d={path} key={key} />
+      <Shape stroke={stroke} d={path} x={left.x} y={top.y} key={key} />
     );
   }
 
@@ -124,7 +123,6 @@ export default class Map extends Component {
     const { tileWidth, tileHeight } = this.props;
     const left   = this.map2screen(x, y + 1);
     var   top    = this.map2screen(x, y);
-    const right  = this.map2screen(x + 1, y);
     const bottom = this.map2screen(x + 1, y + 1);
 
     const ratio = 132 / 93;
@@ -132,19 +130,19 @@ export default class Map extends Component {
     const h = tileWidth / ratio;
 
     const path = new Path()
-      .moveTo(left.x,  top.y)
-      .lineTo(right.x, top.y)
-      .lineTo(right.x, bottom.y)
-      .lineTo(left.x,  bottom.y)
+      .moveTo(0, 0)
+      .lineTo(tileWidth, 0)
+      .lineTo(tileWidth, h)
+      .lineTo(0, h)
       .close()
-      .moveTo(left.x, top.y);
+      .moveTo(0, 0);
 
     const key = 'tex-'+x+'-'+y;
 
-    const pattern = new Pattern(tex.path, tileWidth, h, left.x, top.y);
+    const pattern = new Pattern(tex.path, tileWidth, h, 0, 0);
 
     return (
-      <Shape fill={pattern} d={path} key={key} />
+      <Shape fill={pattern} d={path} x={left.x} y={top.y} key={key} />
     );
   }
 
