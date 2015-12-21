@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+import Radium from 'radium';
 
+@Radium
 export default class TexturePicker extends Component {
   static propTypes = {
     tileset: PropTypes.object
@@ -35,9 +37,9 @@ export default class TexturePicker extends Component {
       height
     };
 
-    const txs = tiles.map(t => {
+    const txs = tiles.map((t, i) => {
       return (
-        <div style={cellStyle}>
+        <div style={cellStyle} key={i}>
           <img src={t.path} style={imageStyle} />
         </div>
       );
