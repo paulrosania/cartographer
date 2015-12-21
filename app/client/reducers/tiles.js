@@ -5,11 +5,7 @@ const initialState = Immutable.List();
 
 function set(mat, x, y, k, v) {
   var xs = mat;
-  if (!xs.has(x)) {
-    xs = xs.set(x, Immutable.List());
-  }
-
-  var ys = xs.get(x);
+  var ys = xs.get(x) || Immutable.List();
   var cell = ys.get(y) || {};
   cell[k] = v;
 
