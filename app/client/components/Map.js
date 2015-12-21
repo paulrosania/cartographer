@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import ReactART, { Group, Path, Shape, Surface } from 'react-art';
+import ReactART, { Group, Path, Pattern, Shape, Surface } from 'react-art';
 
 const PADDING_X = 10;
 const PADDING_Y = 40;
@@ -11,6 +11,7 @@ export default class Map extends Component {
   };
 
   static propTypes = {
+    layers: PropTypes.object.isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     tileWidth: PropTypes.number.isRequired,
@@ -98,7 +99,7 @@ export default class Map extends Component {
     };
   }
 
-  renderTile(x, y, stroke) {
+  renderTileBorder(x, y, stroke) {
     const left   = this.map2screen(x, y + 1);
     const top    = this.map2screen(x, y);
     const right  = this.map2screen(x + 1, y);
@@ -119,23 +120,52 @@ export default class Map extends Component {
     );
   }
 
+  renderTileTexture(x, y, tex) {
+    const { tileWidth, tileHeight } = this.props;
+    const left   = this.map2screen(x, y + 1);
+    var   top    = this.map2screen(x, y);
+    const right  = this.map2screen(x + 1, y);
+    const bottom = this.map2screen(x + 1, y + 1);
+
+    const ratio = 132 / 93;
+    top.y = bottom.y - tileHeight * ratio;
+    const h = tileWidth / ratio;
+
+    const path = new Path()
+      .moveTo(left.x,  top.y)
+      .lineTo(right.x, top.y)
+      .lineTo(right.x, bottom.y)
+      .lineTo(left.x,  bottom.y)
+      .close()
+      .moveTo(left.x, top.y);
+
+    const key = 'tex-'+x+'-'+y;
+
+    const pattern = new Pattern(tex.path, tileWidth, h, left.x, top.y);
+
+    return (
+      <Shape fill={pattern} d={path} key={key} />
+    );
+  }
+
+
   renderGrid() {
     var tiles = [];
 
     for (var x = 0; x < this.props.width; x++) {
       for (var y = 0; y < this.props.height; y++) {
-        tiles.push(this.renderTile(x, y, "#888888"));
+        tiles.push(this.renderTileBorder(x, y, "#888888"));
       }
     }
 
     const { selectedTile, highlightedTile } = this.props;
 
     if (highlightedTile) {
-      tiles.push(this.renderTile(highlightedTile.x, highlightedTile.y, "#ffff00"));
+      tiles.push(this.renderTileBorder(highlightedTile.x, highlightedTile.y, "#ffff00"));
     }
 
     if (selectedTile) {
-      tiles.push(this.renderTile(selectedTile.x, selectedTile.y, "#ffffff"));
+      tiles.push(this.renderTileBorder(selectedTile.x, selectedTile.y, "#ffffff"));
     }
 
     return (
@@ -145,10 +175,39 @@ export default class Map extends Component {
     );
   }
 
+  renderLayers() {
+    const { layers } = this.props;
+    return (
+      <Group>
+        {layers.layers.map(this.renderLayer.bind(this))}
+      </Group>
+    );
+  }
+
+  renderLayer(layer) {
+    var tiles = [];
+
+    for (var x = 0; x < this.props.width; x++) {
+      for (var y = 0; y < this.props.height; y++) {
+        const tile = layer.tiles.getIn([x, y]);
+        if (tile !== undefined) {
+          tiles.push(this.renderTileTexture(x, y, tile.tex));
+        }
+      }
+    }
+
+    return (
+      <Group key={layer.name}>
+        {tiles}
+      </Group>
+    );
+  }
+
   renderFrame() {
     return (
       <Group>
         {this.renderGrid()}
+        {this.renderLayers()}
       </Group>
     );
   }

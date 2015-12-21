@@ -40,7 +40,6 @@ export default class App extends Component {
     const { selectedTile } = map;
     const { x, y } = selectedTile;
     dispatch(tileSetTexture(x, y, t));
-    console.log(t)
   }
 
   render() {
@@ -58,6 +57,7 @@ export default class App extends Component {
           />
         <div className="pane">
           <Map
+            layers={layers}
             width={width}
             height={height}
             tileWidth={tileWidth}
