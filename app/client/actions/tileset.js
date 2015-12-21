@@ -17,8 +17,12 @@ export function tilesetSave() {
 export const TILESET_TILE_ADD = 'TILESET_TILE_ADD';
 export function tilesetTileAdd() {
   return dispatch => {
-    remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-      filters: ['*.png'],
+    const win = remote.getCurrentWindow();
+    const { dialog } = remote;
+    dialog.showOpenDialog(win, {
+      filters: [
+        { name: 'Images', extensions: ['png'] }
+      ],
       properties: ['openFile', 'multiSelections']
     }, (filenames) => {
       if (filenames === undefined) {
