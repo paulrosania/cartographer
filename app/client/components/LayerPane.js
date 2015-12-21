@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 export default class LayerPane extends Component {
   static propTypes = {
-    layers: PropTypes.array.isRequired,
+    layers: PropTypes.object.isRequired,
     selectedLayer: PropTypes.number,
     onLayerClick: PropTypes.func,
     onLayerAdd: PropTypes.func,
@@ -41,7 +41,7 @@ export default class LayerPane extends Component {
       });
 
       return (
-        <a className={cns} onClick={this.genLayerClickHandler(i)}>
+        <a className={cns} onClick={this.genLayerClickHandler(i)} key={i}>
           <span className="icon icon-folder"></span>
           {l.name}
         </a>
@@ -58,7 +58,7 @@ export default class LayerPane extends Component {
           <button className="btn btn-default" onClick={this.props.onLayerAdd}>
             <span className="icon icon-plus"></span>
           </button>
-          <button className="btn btn-default" disabled={layers.length === 0} onClick={this.props.onLayerRemove}>
+          <button className="btn btn-default" disabled={layers.size === 0} onClick={this.props.onLayerRemove}>
             <span className="icon icon-minus"></span>
           </button>
         </div>

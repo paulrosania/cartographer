@@ -4,8 +4,16 @@ import Radium from 'radium';
 @Radium
 export default class TexturePicker extends Component {
   static propTypes = {
-    tileset: PropTypes.object
+    tileset: PropTypes.object,
+    onTileClick: PropTypes.func.isRequired
   };
+
+  genTileClickHandler(i) {
+    return e => {
+      const t = this.props.tileset.tiles[i];
+      this.props.onTileClick(t);
+    };
+  }
 
   render() {
     const { tileset } = this.props;
@@ -26,7 +34,10 @@ export default class TexturePicker extends Component {
     const cellStyle = {
       display: 'inline-block',
       margin: 2,
-      padding: 2
+      padding: 2,
+      ':hover': {
+        background: 'yellow'
+      }
     };
 
     const width = 60;
@@ -39,7 +50,7 @@ export default class TexturePicker extends Component {
 
     const txs = tiles.map((t, i) => {
       return (
-        <div style={cellStyle} key={i}>
+        <div style={cellStyle} key={i} onClick={this.genTileClickHandler(i)}>
           <img src={t.path} style={imageStyle} />
         </div>
       );

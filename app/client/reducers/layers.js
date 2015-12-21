@@ -1,31 +1,41 @@
+import Immutable from 'immutable';
+import layer from './layer';
 import { LAYER_ADD, LAYER_REMOVE, LAYER_CLICK } from '../actions/layers';
+import { TILE_SET_TEXTURE, TILE_SET_PROPERTY } from '../actions/tiles';
 
 const initialState = {
-  layers: [],
+  layers: Immutable.List(),
   selectedIndex: 0,
   nextId: 0
 };
 
 export default function layers(state = initialState, action) {
+  const { layers, selectedIndex } = state;
+
   switch (action.type) {
     case LAYER_ADD:
       return Object.assign({}, state, {
-        layers: state.layers.concat({
-          name: 'Layer ' + state.nextId
+        layers: layers.push({
+          name: 'Layer ' + state.nextId,
+          tiles: Immutable.List()
         }),
         nextId: state.nextId + 1,
-        selectedIndex: state.layers.length
+        selectedIndex: layers.size
       });
     case LAYER_REMOVE:
-      const { layers, selectedIndex } = state;
-
       return Object.assign({}, state, {
-        layers: layers.slice(0, selectedIndex).concat(layers.slice(selectedIndex + 1)),
-        selectedIndex: state.selectedIndex - 1
+        layers: layers.delete(selectedIndex),
+        selectedIndex: selectedIndex - 1
       });
     case LAYER_CLICK:
       return Object.assign({}, state, {
         selectedIndex: action.index
+      });
+    case TILE_SET_TEXTURE:
+    case TILE_SET_PROPERTY:
+      const l = layers.set(selectedIndex, layer(layers.get(selectedIndex), action));
+      return Object.assign({}, state, {
+        layers: l
       });
     default:
       return state;

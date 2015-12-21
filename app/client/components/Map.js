@@ -112,8 +112,10 @@ export default class Map extends Component {
       .close()
       .moveTo(left.x, left.y);
 
+    const key = x+'-'+y+'-'+stroke;
+
     return (
-      <Shape stroke={stroke} d={path} />
+      <Shape stroke={stroke} d={path} key={key} />
     );
   }
 

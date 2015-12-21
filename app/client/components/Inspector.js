@@ -4,11 +4,12 @@ import TexturePicker from './TexturePicker';
 export default class Inspector extends Component {
   static propTypes = {
     tileset: PropTypes.object,
-    tile: PropTypes.object
+    tile: PropTypes.object,
+    onTileClick: PropTypes.func.isRequired
   };
 
   render() {
-    const { tile, tileset } = this.props;
+    const { tile, tileset, onTileClick } = this.props;
 
     const sectionStyle = {
     };
@@ -35,7 +36,8 @@ export default class Inspector extends Component {
         </section>
         <section style={sectionStyle}>
           <h5 style={sectionHeaderStyle}>Texture</h5>
-          <TexturePicker tileset={tileset} />
+          <TexturePicker tileset={tileset}
+            onTileClick={onTileClick} />
         </section>
       </div>
     );
