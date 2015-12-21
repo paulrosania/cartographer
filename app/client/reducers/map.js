@@ -4,7 +4,7 @@ import tileset from './tileset';
 import { LAYER_ADD, LAYER_REMOVE, LAYER_CLICK } from '../actions/layers';
 import { TILE_SET_TEXTURE, TILE_SET_PROPERTY } from '../actions/tiles';
 import { TILESET_LOAD, TILESET_SAVE,
-         TILESET_TILE_ADD, TILESET_TILE_REMOVE } from '../actions/tileset';
+         TILESET_TILE_ADD, TILESET_TILE_REMOVE_SELECTED } from '../actions/tileset';
 import { NEW_MAP, OPEN_MAP, RESIZE_MAP,
          HIGHLIGHT_TILE, SELECT_TILE } from '../actions/map';
 
@@ -21,9 +21,11 @@ const initialState = {
   highlightedTile: null,
   tileset: null,
   layers: {
-    layers: Immutable.List(),
-    selectedIndex: -1,
-    nextId: 0
+    layers: Immutable.List([
+      {name: 'Layer 0', tiles: Immutable.List()}
+    ]),
+    selectedIndex: 0,
+    nextId: 1
   },
   properties: {}
 };
@@ -60,7 +62,7 @@ export default function map(state = initialState, action) {
     case TILESET_LOAD:
     case TILESET_SAVE:
     case TILESET_TILE_ADD:
-    case TILESET_TILE_REMOVE:
+    case TILESET_TILE_REMOVE_SELECTED:
       return Object.assign({}, state, {
         tileset: tileset(state.tileset, action)
       });

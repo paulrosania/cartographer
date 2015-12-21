@@ -1,11 +1,15 @@
 import React, { Component, PropTypes } from 'react';
+import Radium from 'radium';
 import TexturePicker from './TexturePicker';
 
+@Radium
 export default class Inspector extends Component {
   static propTypes = {
     tileset: PropTypes.object,
     tile: PropTypes.object,
-    onTileClick: PropTypes.func.isRequired
+    onTileClick: PropTypes.func.isRequired,
+    onTextureAddClick: PropTypes.func.isRequired,
+    onTextureRemoveClick: PropTypes.func.isRequired
   };
 
   render() {
@@ -29,13 +33,29 @@ export default class Inspector extends Component {
       borderTop: '1px solid #ddd'
     });
 
+    const actionStyle = {
+      cursor: 'pointer',
+      padding: '1px 5px',
+      margin: '0 1px',
+      ':hover': {
+        borderRadius: '3px',
+        background: '#dcdfe1'
+      }
+    };
+
     return (
       <div className="pane pane-sm sidebar">
         <section style={sectionStyle}>
           <h5 style={firstHeaderStyle}>Properties</h5>
         </section>
         <section style={sectionStyle}>
-          <h5 style={sectionHeaderStyle}>Texture</h5>
+          <h5 style={sectionHeaderStyle}>
+            Texture
+            <div style={{float: 'right'}}>
+              <a key="tex-add" style={actionStyle} className="icon icon-plus" onClick={this.props.onTextureAddClick}></a>
+              <a key="tex-remove" style={actionStyle} className="icon icon-minus" onClick={this.props.onTextureRemoveClick}></a>
+            </div>
+          </h5>
           <TexturePicker tileset={tileset}
             onTileClick={onTileClick} />
         </section>

@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { selectTile, highlightTile } from '../actions/map';
 import { layerAdd, layerRemove, layerClick } from '../actions/layers';
+import { tilesetTileAdd, tilesetTileRemoveSelected } from '../actions/tileset';
 import { tileSetTexture } from '../actions/tiles';
 import LayerPane from '../components/LayerPane';
 import Inspector from '../components/Inspector';
@@ -33,6 +34,16 @@ export default class App extends Component {
   handleLayerClick(l, i) {
     const { dispatch } = this.props;
     dispatch(layerClick(l, i));
+  }
+
+  handleTextureAddClick() {
+    const { dispatch } = this.props;
+    dispatch(tilesetTileAdd());
+  }
+
+  handleTextureRemoveClick() {
+    const { dispatch } = this.props;
+    dispatch(tilesetTileRemoveSelected());
   }
 
   handleTextureSelect(t) {
@@ -68,6 +79,8 @@ export default class App extends Component {
             onClick={this.handleMapClick.bind(this)} />
         </div>
         <Inspector tile={selectedTile} tileset={tileset}
+          onTextureAddClick={this.handleTextureAddClick.bind(this)}
+          onTextureRemoveClick={this.handleTextureRemoveClick.bind(this)}
           onTileClick={this.handleTextureSelect.bind(this)} />
       </div>
     );

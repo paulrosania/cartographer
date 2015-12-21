@@ -121,28 +121,28 @@ export default class Map extends Component {
 
   renderTileTexture(x, y, tex) {
     const { tileWidth, tileHeight } = this.props;
-    const left   = this.map2screen(x, y + 1);
-    var   top    = this.map2screen(x, y);
     const bottom = this.map2screen(x + 1, y + 1);
 
-    const ratio = 132 / 93;
-    top.y = bottom.y - tileHeight * ratio;
-    const h = tileWidth / ratio;
+    tex.height = 65;
+    tex.width = 100;
 
     const path = new Path()
       .moveTo(0, 0)
-      .lineTo(tileWidth, 0)
-      .lineTo(tileWidth, h)
-      .lineTo(0, h)
+      .lineTo(tex.width, 0)
+      .lineTo(tex.width, tex.height)
+      .lineTo(0, tex.height)
       .close()
       .moveTo(0, 0);
 
     const key = 'tex-'+x+'-'+y;
-
-    const pattern = new Pattern(tex.path, tileWidth, h, 0, 0);
+    const pattern = new Pattern(tex.path, tex.width, tex.height, 0, 0);
+    const pos = {
+      x: bottom.x - tex.width / 2,
+      y: bottom.y - tex.height
+    };
 
     return (
-      <Shape fill={pattern} d={path} x={left.x} y={top.y} key={key} />
+      <Shape fill={pattern} d={path} x={pos.x} y={pos.y} key={key} />
     );
   }
 
