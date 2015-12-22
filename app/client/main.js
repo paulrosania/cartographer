@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Immutable from 'immutable';
 import thunkMiddleware from 'redux-thunk';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { Provider } from 'react-redux';
@@ -26,6 +27,11 @@ if (params.path !== undefined) {
     flag: 'r'
   });
   initialState = JSON.parse(json);
+  initialState.map.tileset.tiles = Immutable.List(initialState.map.tileset.tiles);
+  initialState.map.layers.layers.forEach(l => {
+    l.tiles = Immutable.fromJS(l.tiles);
+  });
+  initialState.map.layers.layers = Immutable.List(initialState.map.layers.layers);
 } else {
   initialState = undefined;
 }

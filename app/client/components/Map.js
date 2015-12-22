@@ -185,8 +185,8 @@ export default class Map extends Component {
     for (var x = 0; x < this.props.width; x++) {
       for (var y = 0; y < this.props.height; y++) {
         const tile = layer.tiles.getIn([x, y]);
-        if (tile !== undefined) {
-          tiles.push(this.renderTileTexture(x, y, tile.tex));
+        if (tile !== null && tile !== undefined) {
+          tiles.push(this.renderTileTexture(x, y, tile.toJS().tex));
         }
       }
     }
