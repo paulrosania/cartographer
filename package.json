@@ -1,10 +1,11 @@
 {
-  "name": "mapper",
+  "name": "cartographer",
+  "productName": "Cartographer",
   "version": "0.1.0",
   "description": "A tile-based map editor",
   "main": "init.js",
   "author": "Paul Rosania",
-  "repository": "https://github.com/paulrosania/mapper",
+  "repository": "https://github.com/paulrosania/cartographer",
   "license": "MIT",
   "scripts": {
     "serve": "node_modules/.bin/babel-node scripts/serve.js",
