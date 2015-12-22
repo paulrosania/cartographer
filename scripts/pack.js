@@ -26,7 +26,7 @@ fs.writeFileSync(
 
 packager({
   dir: '.',
-  name: packageJson.name,
+  name: packageJson.productName || packageJson.name,
   platform: 'darwin',
   arch: 'x64',
   version: require('electron-prebuilt/package.json').version,
