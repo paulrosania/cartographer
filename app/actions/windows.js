@@ -28,10 +28,10 @@ export function createWindow(path) {
 
 export const SAVE_WINDOW = 'SAVE_WINDOW';
 export function saveWindow(browserWindow) {
+  const id = browserWindow.id;
   return (dispatch, getState) => {
-    const id = browserWindow.id;
     const { windows } = getState();
-    const path = windows[browserWindow.id];
+    const path = windows[id];
     if (path) {
         browserWindow.webContents.send('save', path);
         filename = pathutils.basename(path);
