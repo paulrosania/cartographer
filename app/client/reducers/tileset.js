@@ -3,7 +3,6 @@ import { TILESET_LOAD, TILESET_SAVE,
          TILESET_TILE_ADD, TILESET_TILE_REMOVE } from '../actions/tileset';
 
 const initialState = {
-  nextId: 1,
   selectedIndex: 0,
   tileWidth: 100,
   tileHeight: 50,
@@ -16,9 +15,7 @@ export default function tileset(state = initialState, action) {
     case TILESET_SAVE:
     case TILESET_TILE_ADD:
       return Object.assign({}, state, {
-        nextId: state.nextId + 1,
-        tiles: state.tiles.set(state.nextId, {
-          id: state.nextId,
+        tiles: state.tiles.push({
           path: action.image.src,
           width: action.image.width,
           height: action.image.height

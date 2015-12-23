@@ -20,7 +20,6 @@ const initialState = {
   selectedTile: null,
   highlightedTile: null,
   tileset: {
-    nextId: 1,
     selectedIndex: 0,
     tiles: Immutable.List()
   },
@@ -66,8 +65,13 @@ export default function map(state = initialState, action) {
     case TILESET_LOAD:
     case TILESET_SAVE:
     case TILESET_TILE_ADD:
-    case TILESET_TILE_REMOVE:
       return Object.assign({}, state, {
+        tileset: tileset(state.tileset, action)
+      });
+    case TILESET_TILE_REMOVE:
+      // also calls layers reducer in case the tile was in use
+      return Object.assign({}, state, {
+        layers: layers(state.layers, action),
         tileset: tileset(state.tileset, action)
       });
     default:
