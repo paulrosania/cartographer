@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import { TILESET_LOAD, TILESET_SAVE,
-         TILESET_TILE_ADD, TILESET_TILE_REMOVE_SELECTED } from '../actions/tileset';
+         TILESET_TILE_ADD, TILESET_TILE_REMOVE } from '../actions/tileset';
 
 const initialState = {
   nextId: 1,
@@ -24,9 +24,9 @@ export default function tileset(state = initialState, action) {
           height: action.image.height
         })
       });
-    case TILESET_TILE_REMOVE_SELECTED:
+    case TILESET_TILE_REMOVE:
       return Object.assign({}, state, {
-        tiles: state.tiles.delete(state.selectedIndex)
+        tiles: state.tiles.delete(action.id)
       });
     default:
       return state;

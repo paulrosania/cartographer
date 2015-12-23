@@ -48,10 +48,11 @@ export function tilesetTileLoaded() {
   };
 }
 
-export const TILESET_TILE_REMOVE_SELECTED = 'TILESET_TILE_REMOVE_SELECTED';
-export function tilesetTileRemoveSelected() {
+export const TILESET_TILE_REMOVE = 'TILESET_TILE_REMOVE';
+export function tilesetTileRemove(id) {
   return {
-    type: TILESET_TILE_REMOVE_SELECTED
+    type: TILESET_TILE_REMOVE,
+    id
   };
 }
 
@@ -59,5 +60,5 @@ export default {
   tilesetLoad,
   tilesetSave,
   tilesetTileAdd,
-  tilesetTileRemoveSelected
+  tilesetTileRemove
 };

@@ -10,8 +10,7 @@ export default class TexturePicker extends Component {
 
   genTileClickHandler(i) {
     return e => {
-      const t = this.props.tileset.tiles.get(i);
-      this.props.onTileClick(t);
+      this.props.onTileClick(i);
     };
   }
 

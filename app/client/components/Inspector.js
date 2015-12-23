@@ -12,8 +12,14 @@ export default class Inspector extends Component {
     onTextureRemoveClick: PropTypes.func.isRequired
   };
 
+  handleTextureRemoveClick() {
+    const { tileset, onTextureRemoveClick } = this.props;
+    onTextureRemoveClick(tileset.selectedIndex);
+  }
+
   render() {
-    const { tile, tileset, onTileClick } = this.props;
+    const { tile, tileset, onTileClick,
+            onTextureAddClick, onTextureRemoveClick } = this.props;
 
     const sectionStyle = {
     };
@@ -52,8 +58,8 @@ export default class Inspector extends Component {
           <h5 style={sectionHeaderStyle}>
             Texture
             <div style={{float: 'right'}}>
-              <a key="tex-add" style={actionStyle} className="icon icon-plus" onClick={this.props.onTextureAddClick}></a>
-              <a key="tex-remove" style={actionStyle} className="icon icon-minus" onClick={this.props.onTextureRemoveClick}></a>
+              <a key="tex-add" style={actionStyle} className="icon icon-plus" onClick={onTextureAddClick}></a>
+              <a key="tex-remove" style={actionStyle} className="icon icon-minus" onClick={this.handleTextureRemoveClick.bind(this)}></a>
             </div>
           </h5>
           <TexturePicker tileset={tileset}

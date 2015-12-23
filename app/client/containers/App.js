@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { selectTile, highlightTile } from '../actions/map';
 import { layerAdd, layerRemove, layerClick } from '../actions/layers';
-import { tilesetTileAdd, tilesetTileRemoveSelected } from '../actions/tileset';
+import { tilesetTileAdd, tilesetTileRemove } from '../actions/tileset';
 import { tileSetTexture } from '../actions/tiles';
 import LayerPane from '../components/LayerPane';
 import Inspector from '../components/Inspector';
@@ -41,16 +41,20 @@ export default class App extends Component {
     dispatch(tilesetTileAdd());
   }
 
-  handleTextureRemoveClick() {
+  handleTextureRemoveClick(id) {
     const { dispatch } = this.props;
-    dispatch(tilesetTileRemoveSelected());
+    dispatch(tilesetTileRemove(id));
   }
 
-  handleTextureSelect(t) {
+  handleTextureSelect(id) {
     const { dispatch, map } = this.props;
     const { selectedTile } = map;
+    if (!selectedTile) {
+      return;
+    }
+
     const { x, y } = selectedTile;
-    dispatch(tileSetTexture(x, y, t.id));
+    dispatch(tileSetTexture(x, y, id));
   }
 
   render() {
