@@ -5,8 +5,12 @@ const PADDING_X = 10;
 const PADDING_Y = 40;
 
 export default class Map extends Component {
+  constructor() {
+    super();
+    this.state = {};
+  }
+
   static defaultProps = {
-    onMouseMove: function() {},
     onClick: function() {}
   };
 
@@ -17,10 +21,8 @@ export default class Map extends Component {
     height: PropTypes.number.isRequired,
     tileWidth: PropTypes.number.isRequired,
     tileHeight: PropTypes.number.isRequired,
-    onMouseMove: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
-    selectedTile: PropTypes.object,
-    highlightedTile: PropTypes.object
+    selectedTile: PropTypes.object
   };
 
   pixelWidth() {
@@ -50,17 +52,19 @@ export default class Map extends Component {
   }
 
   handleMouseMove(e) {
-    const { width, height, onMouseMove } = this.props;
+    const { width, height } = this.props;
     const bounds = e.target.getBoundingClientRect();
     const x = e.pageX - bounds.left;
     const y = e.pageY - bounds.top;
     const pt = this.screen2map(x, y);
+    let tile = null;
     if (pt.x >= 0 && pt.y >= 0 && pt.x < width && pt.y < height) {
-      e.tile = pt;
-    } else {
-      e.tile = null;
+      tile = pt;
     }
-    onMouseMove(e);
+
+    this.setState({
+      highlightedTile: tile
+    });
   }
 
   handleClick(e) {
@@ -174,8 +178,6 @@ export default class Map extends Component {
       }
     }
 
-    const { selectedTile, highlightedTile } = this.props;
-
     return (
       <Group>
         {tiles}
@@ -186,7 +188,8 @@ export default class Map extends Component {
   renderSelection() {
     var tiles = [];
 
-    const { selectedTile, highlightedTile } = this.props;
+    const { selectedTile } = this.props;
+    const { highlightedTile } = this.state;
 
     if (highlightedTile) {
       tiles.push(this.renderTileFill(highlightedTile.x, highlightedTile.y, "#ffff0055"));

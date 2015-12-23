@@ -5,8 +5,7 @@ import { LAYER_ADD, LAYER_REMOVE, LAYER_CLICK } from '../actions/layers';
 import { TILE_SET_TEXTURE, TILE_SET_PROPERTY } from '../actions/tiles';
 import { TILESET_LOAD, TILESET_SAVE,
          TILESET_TILE_ADD, TILESET_TILE_REMOVE } from '../actions/tileset';
-import { NEW_MAP, OPEN_MAP, RESIZE_MAP,
-         HIGHLIGHT_TILE, SELECT_TILE } from '../actions/map';
+import { NEW_MAP, OPEN_MAP, RESIZE_MAP, SELECT_TILE } from '../actions/map';
 
 const initialState = {
   orientation: 'staggered',
@@ -18,7 +17,6 @@ const initialState = {
   staggerAxis: 'x',    // [x|y]
   staggerIndex: 'odd', // [odd|even]
   selectedTile: null,
-  highlightedTile: null,
   tileset: {
     selectedIndex: 0,
     tiles: Immutable.List()
@@ -53,10 +51,6 @@ export default function map(state = initialState, action) {
     case TILE_SET_PROPERTY:
       return Object.assign({}, state, {
         layers: layers(state.layers, action)
-      });
-    case HIGHLIGHT_TILE:
-      return Object.assign({}, state, {
-        highlightedTile: action.tile
       });
     case SELECT_TILE:
       return Object.assign({}, state, {

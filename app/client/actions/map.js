@@ -22,14 +22,6 @@ export function resizeMap(width, height) {
   }
 }
 
-export const HIGHLIGHT_TILE = 'HIGHLIGHT_TILE';
-export function highlightTile(tile) {
-  return {
-    type: HIGHLIGHT_TILE,
-    tile
-  }
-}
-
 export const SELECT_TILE = 'SELECT_TILE';
 export function selectTile(tile) {
   return {
