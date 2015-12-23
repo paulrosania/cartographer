@@ -142,7 +142,7 @@ export default class Map extends Component {
 
   renderTileTexture(x, y, texId) {
     const { tileWidth, tileHeight, tileset } = this.props;
-    const tex = tileset.tiles.get(texId);
+    const tex = tileset.tiles.get(texId) || tileset.tiles.get(""+texId);
     const bottom = this.map2screen(x + 1, y + 1);
 
     const path = new Path()
