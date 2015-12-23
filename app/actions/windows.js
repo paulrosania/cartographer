@@ -11,11 +11,12 @@ export function createWindow(path) {
       url = `${baseUrl}?path=${encodedPath}`;
     }
 
-    let win = new BrowserWindow({ width: 1200, height: 1000 });
+    const win = new BrowserWindow({ width: 1200, height: 1000 });
+    const id = win.id;
 
-    dispatch(addWindow(win.id, path));
+    dispatch(addWindow(id, path));
     win.on('closed', () => {
-      dispatch(removeWindow(win.id));
+      dispatch(removeWindow(id));
     });
 
     win.loadURL(url);
