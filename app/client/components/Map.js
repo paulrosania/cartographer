@@ -142,7 +142,7 @@ export default class Map extends Component {
 
   renderTileTexture(x, y, texId) {
     const { tileWidth, tileHeight, tileset } = this.props;
-    const tex = tileset.tiles.get(texId) || tileset.tiles.get(""+texId);
+    const tex = tileset.tiles.get(texId);
     const bottom = this.map2screen(x + 1, y + 1);
 
     const path = new Path()
@@ -219,7 +219,7 @@ export default class Map extends Component {
     for (var x = 0; x < this.props.width; x++) {
       for (var y = 0; y < this.props.height; y++) {
         const tex = layer.tiles.getIn([x, y, 'tex']);
-        if (tex) {
+        if (typeof tex === "number") {
           tiles.push(this.renderTileTexture(x, y, tex));
         }
       }

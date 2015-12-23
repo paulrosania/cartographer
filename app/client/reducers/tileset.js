@@ -7,7 +7,7 @@ const initialState = {
   selectedIndex: 0,
   tileWidth: 100,
   tileHeight: 50,
-  tiles: Immutable.Map()
+  tiles: Immutable.List()
 };
 
 export default function tileset(state = initialState, action) {

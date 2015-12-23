@@ -22,7 +22,7 @@ const initialState = {
   tileset: {
     nextId: 1,
     selectedIndex: 0,
-    tiles: Immutable.Map()
+    tiles: Immutable.List()
   },
   layers: {
     layers: Immutable.List([

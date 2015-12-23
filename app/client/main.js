@@ -27,7 +27,7 @@ if (params.path !== undefined) {
     flag: 'r'
   });
   initialState = JSON.parse(json);
-  initialState.map.tileset.tiles = Immutable.Map(initialState.map.tileset.tiles);
+  initialState.map.tileset.tiles = Immutable.List(initialState.map.tileset.tiles);
   initialState.map.layers.layers.forEach(l => {
     l.tiles = Immutable.fromJS(l.tiles);
   });
