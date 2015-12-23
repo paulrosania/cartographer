@@ -20,8 +20,9 @@ const initialState = {
   selectedTile: null,
   highlightedTile: null,
   tileset: {
+    nextId: 1,
     selectedIndex: 0,
-    tiles: Immutable.List()
+    tiles: Immutable.Map()
   },
   layers: {
     layers: Immutable.List([

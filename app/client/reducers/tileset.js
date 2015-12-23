@@ -3,10 +3,11 @@ import { TILESET_LOAD, TILESET_SAVE,
          TILESET_TILE_ADD, TILESET_TILE_REMOVE_SELECTED } from '../actions/tileset';
 
 const initialState = {
+  nextId: 1,
   selectedIndex: 0,
   tileWidth: 100,
   tileHeight: 50,
-  tiles: Immutable.List()
+  tiles: Immutable.Map()
 };
 
 export default function tileset(state = initialState, action) {
@@ -15,7 +16,9 @@ export default function tileset(state = initialState, action) {
     case TILESET_SAVE:
     case TILESET_TILE_ADD:
       return Object.assign({}, state, {
-        tiles: state.tiles.push({
+        nextId: state.nextId + 1,
+        tiles: state.tiles.set(state.nextId, {
+          id: state.nextId,
           path: action.image.src,
           width: action.image.width,
           height: action.image.height

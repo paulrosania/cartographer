@@ -7,7 +7,7 @@ function set(mat, x, y, k, v) {
   var xs = mat;
   var ys = xs.get(x) || Immutable.List();
   var cell = ys.get(y) || Immutable.Map();
-  cell.set(k, v);
+  cell = cell.set(k, v);
 
   ys = ys.set(y, cell);
   xs = xs.set(x, ys);

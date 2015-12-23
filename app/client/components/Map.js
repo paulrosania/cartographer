@@ -12,6 +12,7 @@ export default class Map extends Component {
 
   static propTypes = {
     layers: PropTypes.object.isRequired,
+    tileset: PropTypes.object.isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     tileWidth: PropTypes.number.isRequired,
@@ -119,8 +120,29 @@ export default class Map extends Component {
     );
   }
 
-  renderTileTexture(x, y, tex) {
+  renderTileFill(x, y, color) {
     const { tileWidth, tileHeight } = this.props;
+    const left = this.map2screen(x, y + 1);
+    const top  = this.map2screen(x, y);
+
+    const path = new Path()
+      .moveTo(tileWidth / 2, 0)
+      .lineTo(tileWidth, tileHeight / 2)
+      .lineTo(tileWidth / 2, tileHeight)
+      .lineTo(0, tileHeight / 2)
+      .close()
+      .moveTo(0, 0);
+
+    const key = x+'-'+y+'-'+color;
+
+    return (
+      <Shape fill={color} d={path} x={left.x} y={top.y} key={key} />
+    );
+  }
+
+  renderTileTexture(x, y, texId) {
+    const { tileWidth, tileHeight, tileset } = this.props;
+    const tex = tileset.tiles.get(texId);
     const bottom = this.map2screen(x + 1, y + 1);
 
     const path = new Path()
@@ -143,7 +165,6 @@ export default class Map extends Component {
     );
   }
 
-
   renderGrid() {
     var tiles = [];
 
@@ -155,13 +176,26 @@ export default class Map extends Component {
 
     const { selectedTile, highlightedTile } = this.props;
 
+    return (
+      <Group>
+        {tiles}
+      </Group>
+    );
+  }
+
+  renderSelection() {
+    var tiles = [];
+
+    const { selectedTile, highlightedTile } = this.props;
+
     if (highlightedTile) {
-      tiles.push(this.renderTileBorder(highlightedTile.x, highlightedTile.y, "#ffff00"));
+      tiles.push(this.renderTileFill(highlightedTile.x, highlightedTile.y, "#ffff0055"));
     }
 
     if (selectedTile) {
-      tiles.push(this.renderTileBorder(selectedTile.x, selectedTile.y, "#ffffff"));
+      tiles.push(this.renderTileFill(selectedTile.x, selectedTile.y, "#ffffff55"));
     }
+
 
     return (
       <Group>
@@ -184,9 +218,9 @@ export default class Map extends Component {
 
     for (var x = 0; x < this.props.width; x++) {
       for (var y = 0; y < this.props.height; y++) {
-        const tile = layer.tiles.getIn([x, y]);
-        if (tile !== null && tile !== undefined) {
-          tiles.push(this.renderTileTexture(x, y, tile.toJS().tex));
+        const tex = layer.tiles.getIn([x, y, 'tex']);
+        if (tex) {
+          tiles.push(this.renderTileTexture(x, y, tex));
         }
       }
     }
@@ -203,6 +237,7 @@ export default class Map extends Component {
       <Group>
         {this.renderGrid()}
         {this.renderLayers()}
+        {this.renderSelection()}
       </Group>
     );
   }

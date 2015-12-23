@@ -56,7 +56,7 @@ export default class TexturePicker extends Component {
           <img src={t.path} style={imageStyle} />
         </div>
       );
-    });
+    }).toArray();
 
     return (
       <div style={containerStyle}>
