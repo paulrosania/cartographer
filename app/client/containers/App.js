@@ -58,13 +58,13 @@ export default class App extends Component {
             selectedTile, layers, selectedLayer, tileset } = map;
 
     return (
-      <div className="pane-group" style={{backgroundColor: "#222222"}}>
+      <div className="pane-group" style={{backgroundColor: '#222222'}}>
         <LayerPane layers={layers.layers} selectedLayer={layers.selectedIndex}
           onLayerAdd={this.handleLayerAdd.bind(this)}
           onLayerRemove={this.handleLayerRemove.bind(this)}
           onLayerClick={this.handleLayerClick.bind(this)}
           />
-        <div className="pane">
+        <div className="pane" style={{height: '100%'}}>
           <Map
             layers={layers}
             tileset={tileset}

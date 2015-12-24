@@ -1,13 +1,23 @@
+import ReactDOM from 'react-dom';
 import React, { Component, PropTypes } from 'react';
 import ReactART, { Group, Path, Pattern, Shape, Surface } from 'react-art';
 
-const PADDING_X = 10;
-const PADDING_Y = 40;
+const CLICK_DELAY = 250 /* ms */;
+const CAMERA_PADDING_X = 10;
+const CAMERA_PADDING_Y = 40;
 
 export default class Map extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      camera: {
+        x: -CAMERA_PADDING_X,
+        y: -CAMERA_PADDING_Y
+      },
+      dragStart: 0,
+      dragOrigin: null,
+      selectedTile: null
+    };
   }
 
   static defaultProps = {
@@ -25,22 +35,43 @@ export default class Map extends Component {
     selectedTile: PropTypes.object
   };
 
+  componentDidMount() {
+    const bounds = ReactDOM.findDOMNode(this).getBoundingClientRect();
+    const mouseMove = this.handleMouseMove.bind(this);
+    const mouseUp = this.handleMouseUp.bind(this);
+    this.setState({
+      bounds,
+      mouseMove,
+      mouseUp,
+      width: bounds.right - bounds.left,
+      height: bounds.bottom - bounds.top
+    });
+    document.addEventListener('mousemove', mouseMove);
+    document.addEventListener('mouseup', mouseUp);
+  }
+
+  componentWillUnmount() {
+    const { mouseMove, mouseUp } = this.state;
+    document.removeEventListener('mousemove', mouseMove);
+    document.removeEventListener('mouseup', mouseUp);
+  }
+
   pixelWidth() {
-    const { width, height, tileWidth } = this.props;
-    return 2 * PADDING_X + tileWidth * (width + height) / 2;
+    return this.state.width;
   }
 
   pixelHeight() {
-    const { width, height, tileHeight } = this.props;
-    return 2 * PADDING_Y + tileHeight * (width + height) / 2;
+    return this.state.height;
   }
 
   render() {
+    const containerStyle = {
+      height: '100%'
+    }
+
     return (
-      <div style={{width:"100%", height:"100%", overflow: "hidden"}}>
-        <div
-          onMouseMove={this.handleMouseMove.bind(this)}
-          onClick={this.handleClick.bind(this)}>
+      <div style={containerStyle}>
+        <div onMouseDown={this.handleMouseDown.bind(this)}>
           <Surface
             width={this.pixelWidth()}
             height={this.pixelHeight()}>
@@ -52,8 +83,8 @@ export default class Map extends Component {
   }
 
   handleMouseMove(e) {
+    const { camera, dragStart, dragOrigin, bounds } = this.state;
     const { width, height } = this.props;
-    const bounds = e.target.getBoundingClientRect();
     const x = e.pageX - bounds.left;
     const y = e.pageY - bounds.top;
     const pt = this.screen2map(x, y);
@@ -62,12 +93,64 @@ export default class Map extends Component {
       tile = pt;
     }
 
+    if (dragStart) {
+      const { tileWidth, tileHeight, width, height } = this.props;
+      const mapWidth = tileWidth * (width + height) / 2;
+      const mapHeight = tileHeight * (width + height) / 2;
+
+      let cx = camera.x + dragOrigin.x - x;
+      let cy = camera.y + dragOrigin.y - y;
+
+      if (cx < -CAMERA_PADDING_X) {
+        cx = -CAMERA_PADDING_X;
+      } else if (cx > mapWidth + CAMERA_PADDING_X - this.state.width) {
+        cx = mapWidth + CAMERA_PADDING_X - this.state.width;
+      }
+
+      if (cy < -CAMERA_PADDING_Y) {
+        cy = -CAMERA_PADDING_Y;
+      } else if (cy > mapHeight + CAMERA_PADDING_Y - this.state.height) {
+        cy = mapHeight + CAMERA_PADDING_Y - this.state.height;
+      }
+
+      this.setState({
+        dragOrigin: { x, y },
+        camera: {
+          x: cx,
+          y: cy
+        }
+      });
+    }
+
     this.setState({
       highlightedTile: tile
     });
   }
 
-  handleClick(e) {
+  handleMouseDown(e) {
+    const bounds = e.target.getBoundingClientRect();
+    const x = e.pageX - bounds.left;
+    const y = e.pageY - bounds.top;
+
+    this.setState({
+      dragStart: Date.now(),
+      dragOrigin: { x, y }
+    });
+  }
+
+  handleMouseUp(e) {
+    const interval = Date.now() - this.state.dragStart;
+    if (interval < CLICK_DELAY) {
+      this.handleMouseClick(e);
+    }
+
+    this.setState({
+      dragStart: 0,
+      dragOrigin: null
+    });
+  }
+
+  handleMouseClick(e) {
     const { width, height, onClick } = this.props;
     const bounds = e.target.getBoundingClientRect();
     const x = e.pageX - bounds.left;
@@ -82,9 +165,11 @@ export default class Map extends Component {
   }
 
   screen2map(x, y) {
+    const { camera } = this.state;
     const { width, height, tileWidth, tileHeight } = this.props;
-    const x0 = PADDING_X + this.pixelWidth() * (height / (width + height));
-    const y0 = PADDING_Y;
+    const mapWidth = tileWidth * (width + height) / 2;
+    const x0 = -camera.x + mapWidth * (height / (width + height));
+    const y0 = -camera.y;
     const ix = (x - x0) * 2 / tileWidth;
     const iy = (y - y0) * 2 / tileHeight;
 
@@ -95,9 +180,11 @@ export default class Map extends Component {
   }
 
   map2screen(x, y) {
+    const { camera } = this.state;
     const { width, height, tileWidth, tileHeight } = this.props;
-    const x0 = PADDING_X + this.pixelWidth() * (height / (width + height));
-    const y0 = PADDING_Y;
+    const mapWidth = tileWidth * (width + height) / 2;
+    const x0 = -camera.x + mapWidth * (height / (width + height));
+    const y0 = -camera.y;
     return {
       x: x0 + (x - y) * tileWidth / 2,
       y: y0 + (x + y) * tileHeight / 2
