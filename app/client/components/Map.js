@@ -10,6 +10,7 @@ export default class Map extends Component {
   constructor() {
     super();
     this.state = {
+      bounds: {},
       camera: {
         x: -CAMERA_PADDING_X,
         y: -CAMERA_PADDING_Y
@@ -35,19 +36,58 @@ export default class Map extends Component {
     selectedTile: PropTypes.object
   };
 
+  getBounds() {
+    return ReactDOM.findDOMNode(this).getBoundingClientRect();
+  }
+
+  updateDimensions() {
+    const bounds = this.getBounds();
+
+    this.setState({
+      bounds
+    }, this.updateClipRegion);
+  }
+
+  updateClipRegion(bounds) {
+    bounds = bounds || this.state.bounds;
+    const xmin = Math.max(0, this.screen2map(0, 0).x);
+    const ymin = Math.max(0, this.screen2map(bounds.width, 0).y);
+    const xmax = Math.min(this.props.width, this.screen2map(bounds.width, bounds.height).x);
+    const ymax = Math.min(this.props.height, this.screen2map(0, bounds.height).y);
+
+    this.setState({
+      xmin, ymin, xmax, ymax
+    });
+  }
+
+  centerCamera() {
+    const bounds = this.getBounds();
+    const { tileWidth, height } = this.props;
+    const { camera } = this.state;
+    const cx = (tileWidth * height - bounds.width) / 2;
+    this.setState({
+      camera: {
+        x: cx,
+        y: camera.y
+      }
+    });
+  }
+
   componentDidMount() {
-    const bounds = ReactDOM.findDOMNode(this).getBoundingClientRect();
+    const { bounds, camera } = this.state;
     const mouseMove = this.handleMouseMove.bind(this);
     const mouseUp = this.handleMouseUp.bind(this);
     this.setState({
-      bounds,
       mouseMove,
-      mouseUp,
-      width: bounds.right - bounds.left,
-      height: bounds.bottom - bounds.top
+      mouseUp
     });
     document.addEventListener('mousemove', mouseMove);
     document.addEventListener('mouseup', mouseUp);
+    document.addEventListener('resize', this.updateDimensions.bind(this));
+
+    this.updateDimensions();
+    this.centerCamera();
+    this.updateClipRegion(this.getBounds());
   }
 
   componentWillUnmount() {
@@ -56,15 +96,10 @@ export default class Map extends Component {
     document.removeEventListener('mouseup', mouseUp);
   }
 
-  pixelWidth() {
-    return this.state.width;
-  }
-
-  pixelHeight() {
-    return this.state.height;
-  }
-
   render() {
+    const { bounds } = this.state;
+    const { width, height } = bounds;
+
     const containerStyle = {
       height: '100%',
       overflow: 'hidden'
@@ -74,8 +109,8 @@ export default class Map extends Component {
       <div style={containerStyle}>
         <div onMouseDown={this.handleMouseDown.bind(this)}>
           <Surface
-            width={this.pixelWidth()}
-            height={this.pixelHeight()}>
+            width={width}
+            height={height}>
             {this.renderFrame()}
           </Surface>
         </div>
@@ -104,14 +139,14 @@ export default class Map extends Component {
 
       if (cx < -CAMERA_PADDING_X) {
         cx = -CAMERA_PADDING_X;
-      } else if (cx > mapWidth + CAMERA_PADDING_X - this.state.width) {
-        cx = mapWidth + CAMERA_PADDING_X - this.state.width;
+      } else if (cx > mapWidth + CAMERA_PADDING_X - this.state.bounds.width) {
+        cx = mapWidth + CAMERA_PADDING_X - this.state.bounds.width;
       }
 
       if (cy < -CAMERA_PADDING_Y) {
         cy = -CAMERA_PADDING_Y;
-      } else if (cy > mapHeight + CAMERA_PADDING_Y - this.state.height) {
-        cy = mapHeight + CAMERA_PADDING_Y - this.state.height;
+      } else if (cy > mapHeight + CAMERA_PADDING_Y - this.state.bounds.height) {
+        cy = mapHeight + CAMERA_PADDING_Y - this.state.bounds.height;
       }
 
       this.setState({
@@ -121,6 +156,8 @@ export default class Map extends Component {
           y: cy
         }
       });
+
+      this.updateClipRegion();
     }
 
     this.setState({
@@ -167,9 +204,8 @@ export default class Map extends Component {
 
   screen2map(x, y) {
     const { camera } = this.state;
-    const { width, height, tileWidth, tileHeight } = this.props;
-    const mapWidth = tileWidth * (width + height) / 2;
-    const x0 = -camera.x + mapWidth * (height / (width + height));
+    const { height, tileWidth, tileHeight } = this.props;
+    const x0 = -camera.x + tileWidth * height / 2;
     const y0 = -camera.y;
     const ix = (x - x0) * 2 / tileWidth;
     const iy = (y - y0) * 2 / tileHeight;
@@ -182,9 +218,8 @@ export default class Map extends Component {
 
   map2screen(x, y) {
     const { camera } = this.state;
-    const { width, height, tileWidth, tileHeight } = this.props;
-    const mapWidth = tileWidth * (width + height) / 2;
-    const x0 = -camera.x + mapWidth * (height / (width + height));
+    const { height, tileWidth, tileHeight } = this.props;
+    const x0 = -camera.x + tileWidth * height / 2;
     const y0 = -camera.y;
     return {
       x: x0 + (x - y) * tileWidth / 2,
@@ -259,9 +294,10 @@ export default class Map extends Component {
 
   renderGrid() {
     var tiles = [];
+    const { xmin, ymin, xmax, ymax } = this.state;
 
-    for (var x = 0; x < this.props.width; x++) {
-      for (var y = 0; y < this.props.height; y++) {
+    for (var x = xmin; x <= xmax; x++) {
+      for (var y = ymin; y <= ymax; y++) {
         tiles.push(this.renderTileBorder(x, y, "#888888"));
       }
     }
@@ -306,9 +342,10 @@ export default class Map extends Component {
 
   renderLayer(layer) {
     var tiles = [];
+    const { xmin, ymin, xmax, ymax } = this.state;
 
-    for (var x = 0; x < this.props.width; x++) {
-      for (var y = 0; y < this.props.height; y++) {
+    for (var x = xmin; x <= xmax; x++) {
+      for (var y = ymin; y <= ymax; y++) {
         const tex = layer.tiles.getIn([x, y, 'tex']);
         if (typeof tex === "number") {
           tiles.push(this.renderTileTexture(x, y, tex));
