@@ -145,8 +145,8 @@ export default class Map extends Component {
 
       if (cy < -CAMERA_PADDING_Y) {
         cy = -CAMERA_PADDING_Y;
-      } else if (cy > mapHeight + CAMERA_PADDING_Y - this.state.bounds.height) {
-        cy = mapHeight + CAMERA_PADDING_Y - this.state.bounds.height;
+      } else if (cy > mapHeight + 2 * CAMERA_PADDING_Y - this.state.bounds.height) {
+        cy = mapHeight + 2 * CAMERA_PADDING_Y - this.state.bounds.height;
       }
 
       this.setState({
