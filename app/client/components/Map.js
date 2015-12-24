@@ -52,8 +52,8 @@ export default class Map extends Component {
     bounds = bounds || this.state.bounds;
     const xmin = Math.max(0, this.screen2map(0, 0).x);
     const ymin = Math.max(0, this.screen2map(bounds.width, 0).y);
-    const xmax = Math.min(this.props.width, this.screen2map(bounds.width, bounds.height).x);
-    const ymax = Math.min(this.props.height, this.screen2map(0, bounds.height).y);
+    const xmax = Math.min(this.props.width - 1, this.screen2map(bounds.width, bounds.height).x);
+    const ymax = Math.min(this.props.height - 1, this.screen2map(0, bounds.height).y);
 
     this.setState({
       xmin, ymin, xmax, ymax
@@ -145,8 +145,8 @@ export default class Map extends Component {
 
       if (cy < -CAMERA_PADDING_Y) {
         cy = -CAMERA_PADDING_Y;
-      } else if (cy > mapHeight + 2 * CAMERA_PADDING_Y - this.state.bounds.height) {
-        cy = mapHeight + 2 * CAMERA_PADDING_Y - this.state.bounds.height;
+      } else if (cy > mapHeight + CAMERA_PADDING_Y - this.state.bounds.height) {
+        cy = mapHeight + CAMERA_PADDING_Y - this.state.bounds.height;
       }
 
       this.setState({
