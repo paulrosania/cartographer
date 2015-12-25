@@ -140,13 +140,13 @@ export default class Map extends Component {
       if (cx < -CAMERA_PADDING_X) {
         cx = -CAMERA_PADDING_X;
       } else if (cx > mapWidth + CAMERA_PADDING_X - this.state.bounds.width) {
-        cx = mapWidth + CAMERA_PADDING_X - this.state.bounds.width;
+        cx = Math.max(-CAMERA_PADDING_X, mapWidth + CAMERA_PADDING_X - this.state.bounds.width);
       }
 
       if (cy < -CAMERA_PADDING_Y) {
         cy = -CAMERA_PADDING_Y;
       } else if (cy > mapHeight + CAMERA_PADDING_Y - this.state.bounds.height) {
-        cy = mapHeight + CAMERA_PADDING_Y - this.state.bounds.height;
+        cy = Math.max(-CAMERA_PADDING_Y, mapHeight + CAMERA_PADDING_Y - this.state.bounds.height);
       }
 
       this.setState({
