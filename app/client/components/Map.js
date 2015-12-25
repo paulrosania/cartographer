@@ -77,13 +77,15 @@ export default class Map extends Component {
     const { bounds, camera } = this.state;
     const mouseMove = this.handleMouseMove.bind(this);
     const mouseUp = this.handleMouseUp.bind(this);
+    const resize = this.updateDimensions.bind(this);
     this.setState({
       mouseMove,
-      mouseUp
+      mouseUp,
+      resize
     });
     document.addEventListener('mousemove', mouseMove);
     document.addEventListener('mouseup', mouseUp);
-    document.addEventListener('resize', this.updateDimensions.bind(this));
+    window.addEventListener('resize', resize);
 
     this.updateDimensions();
     this.centerCamera();
@@ -91,9 +93,10 @@ export default class Map extends Component {
   }
 
   componentWillUnmount() {
-    const { mouseMove, mouseUp } = this.state;
+    const { mouseMove, mouseUp, resize } = this.state;
     document.removeEventListener('mousemove', mouseMove);
     document.removeEventListener('mouseup', mouseUp);
+    window.removeEventListener('resize', resize);
   }
 
   render() {
