@@ -58,27 +58,36 @@ export default class App extends Component {
             selectedTile, layers, selectedLayer, tileset } = map;
 
     return (
-      <div className="pane-group" style={{backgroundColor: '#222222'}}>
-        <LayerPane layers={layers.layers} selectedLayer={layers.selectedIndex}
-          onLayerAdd={this.handleLayerAdd.bind(this)}
-          onLayerRemove={this.handleLayerRemove.bind(this)}
-          onLayerClick={this.handleLayerClick.bind(this)}
-          />
-        <div className="pane" style={{height: '100%'}}>
-          <Map
-            layers={layers}
-            tileset={tileset}
-            width={width}
-            height={height}
-            tileWidth={tileWidth}
-            tileHeight={tileHeight}
-            selectedTile={selectedTile}
-            onClick={this.handleMapClick.bind(this)} />
+      <div className="window">
+        <header className="toolbar toolbar-header">
+          <h1 className="title">Cartographer</h1>
+          <div className="toolbar-actions">
+          </div>
+        </header>
+        <div className="window-content">
+          <div className="pane-group" style={{backgroundColor: '#222222'}}>
+            <LayerPane layers={layers.layers} selectedLayer={layers.selectedIndex}
+              onLayerAdd={this.handleLayerAdd.bind(this)}
+              onLayerRemove={this.handleLayerRemove.bind(this)}
+              onLayerClick={this.handleLayerClick.bind(this)}
+              />
+            <div className="pane" style={{height: '100%'}}>
+              <Map
+                layers={layers}
+                tileset={tileset}
+                width={width}
+                height={height}
+                tileWidth={tileWidth}
+                tileHeight={tileHeight}
+                selectedTile={selectedTile}
+                onClick={this.handleMapClick.bind(this)} />
+            </div>
+            <Inspector tile={selectedTile} tileset={tileset}
+              onTextureAddClick={this.handleTextureAddClick.bind(this)}
+              onTextureRemoveClick={this.handleTextureRemoveClick.bind(this)}
+              onTileClick={this.handleTextureSelect.bind(this)} />
+          </div>
         </div>
-        <Inspector tile={selectedTile} tileset={tileset}
-          onTextureAddClick={this.handleTextureAddClick.bind(this)}
-          onTextureRemoveClick={this.handleTextureRemoveClick.bind(this)}
-          onTileClick={this.handleTextureSelect.bind(this)} />
       </div>
     );
   }

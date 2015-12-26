@@ -11,7 +11,11 @@ export function createWindow(path) {
       url = `${baseUrl}?path=${encodedPath}`;
     }
 
-    const win = new BrowserWindow({ width: 1200, height: 1000 });
+    const win = new BrowserWindow({
+      width: 1200,
+      height: 1000,
+      titleBarStyle: 'hidden'
+    });
     const id = win.id;
 
     dispatch(addWindow(id, path));
