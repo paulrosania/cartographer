@@ -5,12 +5,21 @@ import { selectTile } from '../actions/map';
 import { layerAdd, layerRemove, layerClick } from '../actions/layers';
 import { tilesetTileAdd, tilesetTileRemove } from '../actions/tileset';
 import { tileSetTexture } from '../actions/tiles';
+import Header from '../components/Header';
 import LayerPane from '../components/LayerPane';
 import Inspector from '../components/Inspector';
 import Map from '../components/Map';
 
 @connect((state) => state)
 export default class App extends Component {
+  handleUndoClick() {
+    console.log('undo!');
+  }
+
+  handleRedoClick() {
+    console.log('redo!');
+  }
+
   handleMapClick(e) {
     const { dispatch } = this.props;
     dispatch(selectTile(e.tile));
@@ -59,11 +68,9 @@ export default class App extends Component {
 
     return (
       <div className="window">
-        <header className="toolbar toolbar-header">
-          <h1 className="title">Cartographer</h1>
-          <div className="toolbar-actions">
-          </div>
-        </header>
+        <Header title="Cartographer"
+          onUndoClick={this.handleUndoClick.bind(this)}
+          onRedoClick={this.handleRedoClick.bind(this)} />
         <div className="window-content">
           <div className="pane-group" style={{backgroundColor: '#222222'}}>
             <LayerPane layers={layers.layers} selectedLayer={layers.selectedIndex}
