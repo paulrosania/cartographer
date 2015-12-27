@@ -54,9 +54,7 @@ export default class App extends Component {
   }
 
   handleTextureSelect(id) {
-    const { dispatch } = this.props;
-    const map = this.props.map.present;
-    const { selectedTile } = map;
+    const { dispatch, selectedTile } = this.props;
     if (!selectedTile) {
       return;
     }
@@ -67,8 +65,9 @@ export default class App extends Component {
 
   render() {
     const map = this.props.map.present;
+    const { selectedTile } = this.props;
     const { width, height, tileWidth, tileHeight,
-            selectedTile, layers, selectedLayer, tileset } = map;
+            layers, selectedLayer, tileset } = map;
 
     return (
       <div className="window">

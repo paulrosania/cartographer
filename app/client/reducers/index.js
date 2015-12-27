@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import undoable from 'redux-undo';
 import map from './map';
+import selectedTile from './selectedTile';
 
 /**
  * {
@@ -50,11 +51,12 @@ export default function createReducer(presentState) {
   const undoConfig = {
     initialState: initialState ? initialState.map : undefined,
     filter: (action, currentState, previousState) => {
-      return true;
+      return currentState !== previousState;
     }
   };
 
   return combineReducers({
-    map: undoable(map, undoConfig)
+    map: undoable(map, undoConfig),
+    selectedTile
   });
 }
