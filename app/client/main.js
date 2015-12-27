@@ -38,7 +38,8 @@ if (params.path !== undefined) {
 
 ipc.on('save', (e, path) => {
   console.log('SAVE!', path);
-  const data = JSON.stringify(store.getState());
+  const state = store.getState();
+  const data = JSON.stringify({map: state.map.present});
   fs.writeFile(path, data, {
     encoding: 'utf-8',
     flag: 'w',

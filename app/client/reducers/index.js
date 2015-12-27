@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import undoable from 'redux-undo';
 import map from './map';
 
 /**
@@ -45,6 +46,15 @@ import map from './map';
  * }
  */
 
-export default combineReducers({
-  map
-});
+export default function createReducer(presentState) {
+  const undoConfig = {
+    initialState: initialState ? initialState.map : undefined,
+    filter: (action, currentState, previousState) => {
+      return true;
+    }
+  };
+
+  return combineReducers({
+    map: undoable(map, undoConfig)
+  });
+}

@@ -1,5 +1,5 @@
 import { applyMiddleware, createStore, compose } from 'redux';
-import rootReducer from '../reducers';
+import createReducer from '../reducers';
 import DevTools from '../containers/DevTools';
 
 export default function configureStore(middleware, initialState) {
@@ -8,7 +8,7 @@ export default function configureStore(middleware, initialState) {
     DevTools.instrument()
   )(createStore);
 
-  const store = finalCreateStore(rootReducer, initialState);
+  const store = finalCreateStore(createReducer(initialState));
 
   if (module.hot) {
     module.hot.accept('../reducers', () =>

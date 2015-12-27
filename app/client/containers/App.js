@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
+import { ActionCreators } from 'redux-undo';
 import { connect } from 'react-redux';
 import { selectTile } from '../actions/map';
 import { layerAdd, layerRemove, layerClick } from '../actions/layers';
@@ -13,11 +14,13 @@ import Map from '../components/Map';
 @connect((state) => state)
 export default class App extends Component {
   handleUndoClick() {
-    console.log('undo!');
+    const { dispatch } = this.props;
+    dispatch(ActionCreators.undo());
   }
 
   handleRedoClick() {
-    console.log('redo!');
+    const { dispatch } = this.props;
+    dispatch(ActionCreators.redo());
   }
 
   handleMapClick(e) {
@@ -51,7 +54,8 @@ export default class App extends Component {
   }
 
   handleTextureSelect(id) {
-    const { dispatch, map } = this.props;
+    const { dispatch } = this.props;
+    const map = this.props.map.present;
     const { selectedTile } = map;
     if (!selectedTile) {
       return;
@@ -62,7 +66,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { map } = this.props;
+    const map = this.props.map.present;
     const { width, height, tileWidth, tileHeight,
             selectedTile, layers, selectedLayer, tileset } = map;
 
