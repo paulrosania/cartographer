@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import undoable from 'redux-undo';
 import map from './map';
 import selectedTile from './selectedTile';
+import tilePropertiesSelectedIndex from './tilePropertiesSelectedIndex';
 
 /**
  * {
@@ -57,6 +58,7 @@ export default function createReducer(presentState) {
 
   return combineReducers({
     map: undoable(map, undoConfig),
-    selectedTile
+    selectedTile,
+    tilePropertiesSelectedIndex
   });
 }

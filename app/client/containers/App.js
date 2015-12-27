@@ -4,8 +4,9 @@ import { ActionCreators } from 'redux-undo';
 import { connect } from 'react-redux';
 import { selectTile } from '../actions/map';
 import { layerAdd, layerRemove, layerClick } from '../actions/layers';
+import { selectProperty, propertyAdd, propertyRemove } from '../actions/properties';
 import { tilesetTileAdd, tilesetTileRemove } from '../actions/tileset';
-import { tileSetTexture } from '../actions/tiles';
+import { tileSetTexture, tileSetProperties } from '../actions/tiles';
 import Header from '../components/Header';
 import LayerPane from '../components/LayerPane';
 import Inspector from '../components/Inspector';
@@ -43,6 +44,31 @@ export default class App extends Component {
     dispatch(layerClick(l, i));
   }
 
+  handlePropertyAddClick() {
+    const { dispatch } = this.props;
+    dispatch(propertyAdd());
+  }
+
+  handlePropertyRemoveClick(id) {
+    const { dispatch } = this.props;
+    dispatch(propertyRemove(id));
+  }
+
+  handlePropertyChange(props) {
+    const { dispatch, selectedTile } = this.props;
+    if (!selectedTile) {
+      return;
+    }
+
+    const { x, y } = selectedTile;
+    dispatch(tileSetProperties(x, y, props));
+  }
+
+  handlePropertySelect(id) {
+    const { dispatch } = this.props;
+    dispatch(selectProperty(id));
+  }
+
   handleTextureAddClick() {
     const { dispatch } = this.props;
     dispatch(tilesetTileAdd());
@@ -65,9 +91,17 @@ export default class App extends Component {
 
   render() {
     const map = this.props.map.present;
-    const { selectedTile } = this.props;
+    const { selectedTile, tilePropertiesSelectedIndex } = this.props;
     const { width, height, tileWidth, tileHeight,
-            layers, selectedLayer, tileset } = map;
+      layers, selectedLayer, tileset } = map;
+
+    var properties = {};
+    if (selectedTile) {
+      let tile = layers.layers.get(layers.selectedIndex).tiles.getIn([selectedTile.x, selectedTile.y]);
+      if (tile) {
+        properties = tile.toJSON();
+      }
+    }
 
     return (
       <div className="window">
@@ -92,7 +126,12 @@ export default class App extends Component {
                 selectedTile={selectedTile}
                 onClick={this.handleMapClick.bind(this)} />
             </div>
-            <Inspector tile={selectedTile} tileset={tileset}
+            <Inspector tile={selectedTile} tileset={tileset} properties={properties}
+              tilePropertiesSelectedIndex={tilePropertiesSelectedIndex}
+              onPropertyAddClick={this.handlePropertyAddClick.bind(this)}
+              onPropertyRemoveClick={this.handlePropertyRemoveClick.bind(this)}
+              onPropertyChange={this.handlePropertyChange.bind(this)}
+              onPropertySelect={this.handlePropertySelect.bind(this)}
               onTextureAddClick={this.handleTextureAddClick.bind(this)}
               onTextureRemoveClick={this.handleTextureRemoveClick.bind(this)}
               onTileClick={this.handleTextureSelect.bind(this)} />

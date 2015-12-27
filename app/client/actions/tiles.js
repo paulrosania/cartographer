@@ -6,15 +6,15 @@ export function tileSetTexture(x, y, tex) {
   };
 }
 
-export const TILE_SET_PROPERTY = 'TILE_SET_PROPERTY';
-export function tileSetProperty(x, y, key, value) {
+export const TILE_SET_PROPERTIES = 'TILE_SET_PROPERTIES';
+export function tileSetProperties(x, y, properties) {
   return {
-    type: TILE_SET_PROPERTY,
-    x, y, key, value
+    type: TILE_SET_PROPERTIES,
+    x, y, properties
   };
 }
 
 export default {
   tileSetTexture,
-  tileSetProperty
+  tileSetProperties
 };

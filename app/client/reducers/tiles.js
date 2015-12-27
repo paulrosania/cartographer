@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { TILE_SET_TEXTURE, TILE_SET_PROPERTY } from '../actions/tiles';
+import { TILE_SET_TEXTURE, TILE_SET_PROPERTIES } from '../actions/tiles';
 import { TILESET_TILE_REMOVE } from '../actions/tileset';
 
 const initialState = Immutable.List();
@@ -16,15 +16,24 @@ function set(mat, x, y, k, v) {
   return xs;
 }
 
+function setAll(mat, x, y, props) {
+  var xs = mat;
+  var ys = xs.get(x) || Immutable.List();
+
+  ys = ys.set(y, Immutable.Map(props));
+  xs = xs.set(x, ys);
+
+  return xs;
+}
+
 export default function tiles(state = initialState, action) {
   const { x, y } = action;
   switch (action.type) {
     case TILE_SET_TEXTURE:
       let { tex } = action;
       return set(state, x, y, 'tex', tex);
-    case TILE_SET_PROPERTY:
-      const { key, value } = action;
-      return set(state, x, y, key, value);
+    case TILE_SET_PROPERTIES:
+      return setAll(state, x, y, action.properties);
     case TILESET_TILE_REMOVE:
       return state.map(ys => ys.map(cell => {
         if (!cell) {
