@@ -45,8 +45,21 @@ export default class App extends Component {
   }
 
   handlePropertyAddClick() {
-    const { dispatch } = this.props;
-    dispatch(propertyAdd());
+    const { dispatch, selectedTile } = this.props;
+    if (!selectedTile) {
+      return;
+    }
+
+    const map = this.props.map.present;
+    const { layers } = map;
+    const layer = layers.layers.get(layers.selectedIndex);
+    const { x, y } = selectedTile;
+    const tile = layer.tiles.getIn([x, y]);
+    if (!tile) {
+      return;
+    }
+
+    dispatch(selectProperty(tile.size));
   }
 
   handlePropertyRemoveClick(id) {

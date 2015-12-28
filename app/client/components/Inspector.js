@@ -19,8 +19,8 @@ export default class Inspector extends Component {
   };
 
   handlePropertyRemoveClick() {
-    const { tilePropertySelectedIndex, onPropertyRemove } = this.props;
-    onPropertyRemove(tilePropertySelectedIndex);
+    const { tilePropertySelectedIndex, onPropertyRemoveClick } = this.props;
+    onPropertyRemoveClick(tilePropertySelectedIndex);
   }
 
   handleTextureRemoveClick() {
