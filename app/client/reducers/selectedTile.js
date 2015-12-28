@@ -7,6 +7,10 @@ export default function selectedTile(state = initialState, action) {
     case RESIZE_MAP:
       return null;
     case SELECT_TILE:
+      if (action.tile === null) {
+        return null;
+      }
+
       return Object.assign({}, action.tile);
     default:
       return state;
