@@ -19,43 +19,118 @@ export default class PropertyList extends Component {
     onSelect: PropTypes.func.isRequired
   };
 
+  constructor() {
+    super();
+    this.state = {
+      editing: null,
+      editValue: null
+    };
+  }
+
   genClickHandler(i) {
     return (e) => {
       this.props.onSelect(i);
     };
   }
 
-  genKeyChangeHandler(oldKey) {
-    const { onChange } = this.props;
-    const properties = this.props.properties || {};
-    const keys = Object.keys(properties);
-    const value = properties[oldKey];
-    return (e) => {
-      const newKey = e.target.value;
-      let newProperties = Object.assign({}, properties, {
-        [newKey]: value
+  handleKeyKeyUp(e) {
+    if (e.key === 'Escape') {
+      this.setState({
+        editing: null,
+        editValue: null
       });
-      delete newProperties[oldKey];
-      onChange(newProperties);
+    } else if (e.key === 'Enter') {
+      this.handleKeySubmit();
     }
   }
 
-  genValueChangeHandler(i) {
-    const { onChange } = this.props;
+  handleEditValueChange(e) {
+    this.setState({
+      editValue: e.target.value
+    });
+  }
+
+  handleKeySubmit() {
+    this.setState({
+      editing: null,
+      editValue: null
+    });
+
+    const { selectedIndex, onChange } = this.props;
+    const { editValue: newKey } = this.state;
     const properties = this.props.properties || {};
-    const keys = Object.keys(properties);
-    const key = i < keys.length ? keys[i] : null;
-    return (e) => {
-      const newValue = coerce(e.target.value);
-      const newProperties = Object.assign({}, properties, {
-        [key]: newValue
+    const keys = _.sortBy(Object.keys(properties));
+    const oldKey = selectedIndex < keys.length ? keys[selectedIndex] : null;
+    const value = properties[oldKey];
+    let newProperties = Object.assign({}, properties, {
+      [newKey]: value
+    });
+    delete newProperties[oldKey];
+    onChange(newProperties);
+  }
+
+  handleValueKeyUp(e) {
+    if (e.key === 'Escape') {
+      this.setState({
+        editing: null,
+        editValue: null
       });
-      onChange(newProperties);
+    } else if (e.key === 'Enter') {
+      this.handleValueSubmit();
     }
+  }
+
+  handleValueSubmit() {
+    this.setState({
+      editing: null,
+      editValue: null
+    });
+
+    const { selectedIndex, onChange } = this.props;
+    const properties = this.props.properties || {};
+    const keys = _.sortBy(Object.keys(properties));
+    const key = selectedIndex < keys.length ? keys[selectedIndex] : null;
+    const newValue = coerce(this.state.editValue);
+    const newProperties = Object.assign({}, properties, {
+      [key]: newValue
+    });
+    onChange(newProperties);
+  }
+
+  handleKeyDoubleClick() {
+    const { selectedIndex } = this.props;
+    const properties = this.props.properties || {};
+    const keys = _.sortBy(Object.keys(properties));
+    const key = selectedIndex < keys.length ? keys[selectedIndex] : null;
+
+    this.setState({
+      editing: 'key',
+      editValue: key
+    });
+  }
+
+  handleValueDoubleClick() {
+    const { selectedIndex } = this.props;
+    const properties = this.props.properties || {};
+    const keys = _.sortBy(Object.keys(properties));
+    const key = selectedIndex < keys.length ? keys[selectedIndex] : null;
+    const value = properties[key];
+
+    this.setState({
+      editing: 'value',
+      editValue: value
+    });
+  }
+
+  handleInputBlur() {
+    this.setState({
+      editing: null
+    });
   }
 
   render() {
     const { selectedIndex } = this.props;
+    const { editing, editValue } = this.state;
     const properties = this.props.properties || {};
 
     const selectedRowStyle = {
@@ -63,30 +138,68 @@ export default class PropertyList extends Component {
       color: '#fff'
     };
 
-    const inputStyle = {
-      background: 'none',
-      border: 'none',
-      padding: 0,
-      margin: 0,
-      width: '100%',
-      outline: 'none'
+    const cellStyle = {
+      height: '1em',
+      width: '50%'
     };
 
+    const inputStyle = {
+      color: '#000',
+      margin: 0,
+      width: '100%',
+    };
+
+    const handleKeyDoubleClick = this.handleKeyDoubleClick.bind(this);
+    const handleValueDoubleClick = this.handleValueDoubleClick.bind(this);
+    const handleKeyKeyUp = this.handleKeyKeyUp.bind(this);
+    const handleValueKeyUp = this.handleValueKeyUp.bind(this);
+    const handleEditValueChange = this.handleEditValueChange.bind(this);
+    const handleInputBlur = this.handleInputBlur.bind(this);
+
     const keys = _.sortBy(Object.keys(properties)).concat('');
-    console.log(keys)
     const rows = keys.map((key, i) => {
       const value = properties[key];
       const selected = selectedIndex === i;
       const rowStyle = selected ? selectedRowStyle : null;
-
       const rowKey = key;
       const keyKey = key + "Key";
       const valueKey = key + "Value";
 
+      var keyCell = (<td style={cellStyle} onDoubleClick={handleKeyDoubleClick}>{key}</td>);
+      var valueCell = (<td style={cellStyle} onDoubleClick={handleValueDoubleClick}>{value}</td>);
+
+      if (selected && editing === 'key') {
+        var keyCell = (
+          <td style={cellStyle}>
+            <input type="text"
+              autoFocus
+              value={editValue}
+              style={inputStyle}
+              onChange={handleEditValueChange}
+              onKeyUp={handleKeyKeyUp}
+              onBlur={handleInputBlur}/>
+          </td>
+        );
+      }
+
+      if (selected && editing === 'value') {
+        var valueCell = (
+          <td style={cellStyle}>
+            <input type="text"
+              autoFocus
+              value={editValue}
+              style={inputStyle}
+              onChange={handleEditValueChange}
+              onKeyUp={handleValueKeyUp}
+              onBlur={handleInputBlur}/>
+          </td>
+        );
+      }
+
       return (
         <tr key={rowKey} style={rowStyle} onClick={this.genClickHandler(i)}>
-          <td><input type="text" key={keyKey} value={key} style={inputStyle} onChange={this.genKeyChangeHandler(key)}/></td>
-          <td><input type="text" key={valueKey} value={value} style={inputStyle} onChange={this.genValueChangeHandler(i)}/></td>
+          {keyCell}
+          {valueCell}
         </tr>
       );
     });
