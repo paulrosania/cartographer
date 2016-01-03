@@ -68,7 +68,7 @@ export default class PropertyList extends Component {
       border: 'none',
       padding: 0,
       margin: 0,
-      width: '50px',
+      width: '100%',
       outline: 'none'
     };
 
