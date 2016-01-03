@@ -25,12 +25,11 @@ export default class PropertyList extends Component {
     };
   }
 
-  genKeyChangeHandler(i) {
+  genKeyChangeHandler(oldKey) {
     const { onChange } = this.props;
     const properties = this.props.properties || {};
     const keys = Object.keys(properties);
-    const oldKey = i < keys.length ? keys[i] : null;
-    const value = oldKey ? properties[oldKey] : null;
+    const value = properties[oldKey];
     return (e) => {
       const newKey = e.target.value;
       let newProperties = Object.assign({}, properties, {
@@ -73,19 +72,20 @@ export default class PropertyList extends Component {
       outline: 'none'
     };
 
-    const keys = Object.keys(properties).concat('');
+    const keys = _.sortBy(Object.keys(properties)).concat('');
+    console.log(keys)
     const rows = keys.map((key, i) => {
       const value = properties[key];
       const selected = selectedIndex === i;
       const rowStyle = selected ? selectedRowStyle : null;
 
-      const rowKey = "prop" + i;
+      const rowKey = key;
       const keyKey = key + "Key";
       const valueKey = key + "Value";
 
       return (
         <tr key={rowKey} style={rowStyle} onClick={this.genClickHandler(i)}>
-          <td><input type="text" key={keyKey} value={key} style={inputStyle} onChange={this.genKeyChangeHandler(i)}/></td>
+          <td><input type="text" key={keyKey} value={key} style={inputStyle} onChange={this.genKeyChangeHandler(key)}/></td>
           <td><input type="text" key={valueKey} value={value} style={inputStyle} onChange={this.genValueChangeHandler(i)}/></td>
         </tr>
       );
