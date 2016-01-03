@@ -13,14 +13,6 @@ export function addProperty() {
   }
 }
 
-export const REMOVE_PROPERTY = 'REMOVE_PROPERTY';
-export function removeProperty(index) {
-  return {
-    type: REMOVE_PROPERTY,
-    index
-  }
-}
-
 export const PROPERTY_CHANGE = 'PROPERTY_CHANGE';
 export function propertyChange(properties) {
   return {
@@ -31,7 +23,6 @@ export function propertyChange(properties) {
 
 export default {
   addProperty,
-  removeProperty,
   selectProperty,
   propertyChange
 };

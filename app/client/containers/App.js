@@ -4,9 +4,9 @@ import { ActionCreators } from 'redux-undo';
 import { connect } from 'react-redux';
 import { selectTile } from '../actions/map';
 import { layerAdd, layerRemove, layerClick } from '../actions/layers';
-import { selectProperty, propertyAdd, propertyRemove } from '../actions/properties';
+import { selectProperty } from '../actions/properties';
 import { tilesetTileAdd, tilesetTileRemove } from '../actions/tileset';
-import { tileSetTexture, tileSetProperties } from '../actions/tiles';
+import { tileSetTexture, tileSetProperties, tileRemoveProperty } from '../actions/tiles';
 import Header from '../components/Header';
 import LayerPane from '../components/LayerPane';
 import Inspector from '../components/Inspector';
@@ -63,8 +63,13 @@ export default class App extends Component {
   }
 
   handlePropertyRemoveClick(id) {
-    const { dispatch } = this.props;
-    dispatch(propertyRemove(id));
+    const { dispatch, selectedTile } = this.props;
+    if (!selectedTile) {
+      return;
+    }
+
+    const { x, y } = selectedTile;
+    dispatch(tileRemoveProperty(x, y, id));
   }
 
   handlePropertyChange(props) {

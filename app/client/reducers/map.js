@@ -2,7 +2,8 @@ import Immutable from 'immutable';
 import layers from './layers';
 import tileset from './tileset';
 import { LAYER_ADD, LAYER_REMOVE, LAYER_CLICK } from '../actions/layers';
-import { TILE_SET_TEXTURE, TILE_SET_PROPERTIES } from '../actions/tiles';
+import { TILE_SET_TEXTURE, TILE_SET_PROPERTIES,
+         TILE_REMOVE_PROPERTY } from '../actions/tiles';
 import { TILESET_LOAD, TILESET_SAVE,
          TILESET_TILE_ADD, TILESET_TILE_REMOVE } from '../actions/tileset';
 import { NEW_MAP, OPEN_MAP, RESIZE_MAP } from '../actions/map';
@@ -48,6 +49,7 @@ export default function map(state = initialState, action) {
     case LAYER_CLICK:
     case TILE_SET_TEXTURE:
     case TILE_SET_PROPERTIES:
+    case TILE_REMOVE_PROPERTY:
       return Object.assign({}, state, {
         layers: layers(state.layers, action)
       });

@@ -14,7 +14,16 @@ export function tileSetProperties(x, y, properties) {
   };
 }
 
+export const TILE_REMOVE_PROPERTY = 'TILE_REMOVE_PROPERTY';
+export function tileRemoveProperty(x, y, index) {
+  return {
+    type: TILE_REMOVE_PROPERTY,
+    x, y, index
+  }
+}
+
 export default {
   tileSetTexture,
-  tileSetProperties
+  tileSetProperties,
+  tileRemoveProperty
 };

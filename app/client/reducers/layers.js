@@ -1,7 +1,8 @@
 import Immutable from 'immutable';
 import layer from './layer';
 import { LAYER_ADD, LAYER_REMOVE, LAYER_CLICK } from '../actions/layers';
-import { TILE_SET_TEXTURE, TILE_SET_PROPERTIES } from '../actions/tiles';
+import { TILE_SET_TEXTURE, TILE_SET_PROPERTIES,
+         TILE_REMOVE_PROPERTY } from '../actions/tiles';
 import { TILESET_TILE_REMOVE } from '../actions/tileset';
 
 const initialState = {
@@ -34,6 +35,7 @@ export default function layers(state = initialState, action) {
       });
     case TILE_SET_TEXTURE:
     case TILE_SET_PROPERTIES:
+    case TILE_REMOVE_PROPERTY:
       const l = layers.set(selectedIndex, layer(layers.get(selectedIndex), action));
       return Object.assign({}, state, {
         layers: l
