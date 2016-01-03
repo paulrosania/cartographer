@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import _ from 'lodash';
 
 function coerce(str) {
   if (str === '') {
@@ -78,10 +79,14 @@ export default class PropertyList extends Component {
       const selected = selectedIndex === i;
       const rowStyle = selected ? selectedRowStyle : null;
 
+      const rowKey = "prop" + i;
+      const keyKey = key + "Key";
+      const valueKey = key + "Value";
+
       return (
-        <tr key={key} style={rowStyle} onClick={this.genClickHandler(i)}>
-          <td><input type="text" value={key} style={inputStyle} onChange={this.genKeyChangeHandler(i)}/></td>
-          <td><input type="text" value={value} style={inputStyle} onChange={this.genValueChangeHandler(i)}/></td>
+        <tr key={rowKey} style={rowStyle} onClick={this.genClickHandler(i)}>
+          <td><input type="text" key={keyKey} value={key} style={inputStyle} onChange={this.genKeyChangeHandler(i)}/></td>
+          <td><input type="text" key={valueKey} value={value} style={inputStyle} onChange={this.genValueChangeHandler(i)}/></td>
         </tr>
       );
     });
