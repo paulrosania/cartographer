@@ -20,18 +20,58 @@ function parseQueryString(qs) {
            .reduce((acc, [k, v]) => { acc[k] = v; return acc; }, {});
 }
 
+const jsmap = {
+  encode: (state) => {
+    const map = state.map.present;
+    const data = {
+      map: {
+        height: map.height,
+        width: map.width,
+        tileHeight: map.tileHeight,
+        tileWidth: map.tileWidth,
+        properties: map.properties,
+        tileset: map.tileset.tiles,
+        layers: map.layers.layers
+      }
+    }
+    return JSON.stringify(data);
+  },
+  decode: (raw) => {
+    const data = JSON.parse(raw);
+    const map = data.map;
+    const initialState = {
+      map: {
+        height: map.height,
+        width: map.width,
+        tileHeight: map.tileHeight,
+        tileWidth: map.tileWidth,
+        properties: map.properties,
+        tileset: {
+          nextId: map.tileset.reduce((max, t) => { return Math.max(max, t.id); }, 0) + 1,
+          selectedIndex: 0,
+          tiles: Immutable.List(map.tileset)
+        },
+        layers: {
+          layers: Immutable.List(map.layers),
+          selectedIndex: 0,
+          nextId: map.layers.length
+        }
+      }
+    };
+    initialState.map.layers.layers.forEach(l => {
+      l.tiles = Immutable.fromJS(l.tiles);
+    });
+    return initialState;
+  }
+};
+
 const params = parseQueryString(window.location.search);
 if (params.path !== undefined) {
   let json = fs.readFileSync(params.path, {
     encoding: 'utf-8',
     flag: 'r'
   });
-  initialState = JSON.parse(json);
-  initialState.map.tileset.tiles = Immutable.List(initialState.map.tileset.tiles);
-  initialState.map.layers.layers.forEach(l => {
-    l.tiles = Immutable.fromJS(l.tiles);
-  });
-  initialState.map.layers.layers = Immutable.List(initialState.map.layers.layers);
+  initialState = jsmap.decode(json);
 } else {
   initialState = undefined;
 }
@@ -39,7 +79,7 @@ if (params.path !== undefined) {
 ipc.on('save', (e, path) => {
   console.log('SAVE!', path);
   const state = store.getState();
-  const data = JSON.stringify({map: state.map.present});
+  const data = jsmap.encode(state);
   fs.writeFile(path, data, {
     encoding: 'utf-8',
     flag: 'w',
