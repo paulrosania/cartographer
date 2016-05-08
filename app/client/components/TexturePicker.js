@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
+import { default as fspath } from 'path';
 
 @Radium
 export default class TexturePicker extends Component {
   static propTypes = {
+    texturePath: PropTypes.string.isRequired,
     tileset: PropTypes.object,
     onTileClick: PropTypes.func.isRequired
   };
@@ -15,7 +17,7 @@ export default class TexturePicker extends Component {
   }
 
   render() {
-    const { tileset } = this.props;
+    const { texturePath, tileset } = this.props;
     const { tiles } = tileset;
 
     const containerStyle = {
@@ -49,10 +51,11 @@ export default class TexturePicker extends Component {
         width,
         height
       };
+      const path = fspath.join(texturePath, t.path);
 
       return (
         <div style={cellStyle} key={i} onClick={this.genTileClickHandler(i)}>
-          <img src={t.path} style={imageStyle} />
+          <img src={path} style={imageStyle} />
         </div>
       );
     }).toArray();

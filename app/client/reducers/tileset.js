@@ -16,7 +16,7 @@ export default function tileset(state = initialState, action) {
     case TILESET_TILE_ADD:
       return Object.assign({}, state, {
         tiles: state.tiles.push({
-          path: action.image.src,
+          path: action.path,
           width: action.image.width,
           height: action.image.height
         })

@@ -34,7 +34,8 @@ export function tilesetTileAdd() {
         img.src = path;
         img.addEventListener('load', e => dispatch({
           type: TILESET_TILE_ADD,
-          image: img
+          image: img,
+          path: path
         }));
       });
     });

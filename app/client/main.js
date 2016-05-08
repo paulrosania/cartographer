@@ -8,6 +8,7 @@ import configureStore from './store/configureStore';
 import Root from './containers/Root';
 import ipc from 'ipc-renderer';
 import fs from 'fs';
+import path from 'path';
 
 function parseQueryString(qs) {
   if (qs.length <= 1) {
@@ -36,11 +37,20 @@ const jsmap = {
     }
     return JSON.stringify(data);
   },
-  decode: (raw) => {
+  decode: (raw, filePath) => {
     const data = JSON.parse(raw);
     const map = data.map;
+
+    const root = 'file://' + path.dirname(filePath);
+    map.tileset.forEach(t => {
+      if (t.path.startsWith(root)) {
+        t.path = t.path.substring(root.length + 1);
+      }
+    });
+
     const initialState = {
       map: {
+        path: filePath,
         height: map.height,
         width: map.width,
         tileHeight: map.tileHeight,
@@ -71,7 +81,7 @@ if (params.path !== undefined) {
     encoding: 'utf-8',
     flag: 'r'
   });
-  initialState = jsmap.decode(json);
+  initialState = jsmap.decode(json, params.path);
 } else {
   initialState = undefined;
 }

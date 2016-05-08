@@ -6,6 +6,7 @@ import TexturePicker from './TexturePicker';
 @Radium
 export default class Inspector extends Component {
   static propTypes = {
+    texturePath: PropTypes.string.isRequired,
     tileset: PropTypes.object,
     tile: PropTypes.object,
     tilePropertiesSelectedIndex: PropTypes.number,
@@ -29,7 +30,7 @@ export default class Inspector extends Component {
   }
 
   render() {
-    const { tile, tileset, properties, tilePropertiesSelectedIndex,
+    const { texturePath, tile, tileset, properties, tilePropertiesSelectedIndex,
       onTileClick, onPropertyAddClick, onPropertyChange, onPropertySelect,
       onTextureAddClick } = this.props;
 
@@ -85,6 +86,7 @@ export default class Inspector extends Component {
             </div>
           </h5>
           <TexturePicker tileset={tileset}
+            texturePath={texturePath}
             onTileClick={onTileClick} />
         </section>
       </div>

@@ -11,6 +11,7 @@ import Header from '../components/Header';
 import LayerPane from '../components/LayerPane';
 import Inspector from '../components/Inspector';
 import Map from '../components/Map';
+import path from 'path';
 
 @connect((state) => state)
 export default class App extends Component {
@@ -112,6 +113,7 @@ export default class App extends Component {
     const { selectedTile, tilePropertiesSelectedIndex } = this.props;
     const { width, height, tileWidth, tileHeight,
       layers, selectedLayer, tileset } = map;
+    const texturePath = path.dirname(map.path);
 
     var properties = {};
     if (selectedTile) {
@@ -135,6 +137,7 @@ export default class App extends Component {
               />
             <div className="pane" style={{height: '100%'}}>
               <Map
+                texturePath={texturePath}
                 layers={layers}
                 tileset={tileset}
                 width={width}
@@ -145,6 +148,7 @@ export default class App extends Component {
                 onClick={this.handleMapClick.bind(this)} />
             </div>
             <Inspector tile={selectedTile} tileset={tileset} properties={properties}
+              texturePath={texturePath}
               tilePropertiesSelectedIndex={tilePropertiesSelectedIndex}
               onPropertyAddClick={this.handlePropertyAddClick.bind(this)}
               onPropertyRemoveClick={this.handlePropertyRemoveClick.bind(this)}

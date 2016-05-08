@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import React, { Component, PropTypes } from 'react';
 import ReactART, { Group, Path, Pattern, Shape, Surface } from 'react-art';
+import { default as fspath } from 'path';
 
 const CLICK_DELAY = 250 /* ms */;
 const CAMERA_PADDING_X = 10;
@@ -26,6 +27,7 @@ export default class Map extends Component {
   };
 
   static propTypes = {
+    texturePath: PropTypes.string.isRequired,
     layers: PropTypes.object.isRequired,
     tileset: PropTypes.object.isRequired,
     width: PropTypes.number.isRequired,
@@ -271,7 +273,7 @@ export default class Map extends Component {
   }
 
   renderTileTexture(x, y, texId) {
-    const { tileWidth, tileHeight, tileset } = this.props;
+    const { texturePath, tileWidth, tileHeight, tileset } = this.props;
     const tex = tileset.tiles.get(texId);
     const bottom = this.map2screen(x + 1, y + 1);
 
@@ -284,7 +286,8 @@ export default class Map extends Component {
       .moveTo(0, 0);
 
     const key = 'tex-'+x+'-'+y;
-    const pattern = new Pattern(tex.path, tex.width, tex.height, 0, 0);
+    const patternPath = fspath.join(texturePath, tex.path);
+    const pattern = new Pattern(patternPath, tex.width, tex.height, 0, 0);
     const pos = {
       x: bottom.x - tex.width / 2,
       y: bottom.y - tex.height

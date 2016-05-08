@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import { default as fspath } from 'path';
 import layers from './layers';
 import tileset from './tileset';
 import { LAYER_ADD, LAYER_REMOVE, LAYER_CLICK } from '../actions/layers';
@@ -55,7 +56,14 @@ export default function map(state = initialState, action) {
       });
     case TILESET_LOAD:
     case TILESET_SAVE:
+      return Object.assign({}, state, {
+        tileset: tileset(state.tileset, action)
+      });
     case TILESET_TILE_ADD:
+      const root = fspath.dirname(state.path);
+      if (action.path.startsWith(root)) {
+        action.path = action.path.substring(root.length + 1);
+      }
       return Object.assign({}, state, {
         tileset: tileset(state.tileset, action)
       });
